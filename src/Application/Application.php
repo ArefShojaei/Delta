@@ -13,10 +13,9 @@ use Delta\Components\Routing\Attributes\{
 };
 use Delta\Components\Routing\Router;
 use Delta\Components\Http\HttpBuilder;
-use ReflectionMethod;
-use stdClass;
 
-final class Application
+
+final class Application implements ApplicationContract
 {
     private object $router;
 
