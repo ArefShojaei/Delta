@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Components\Routing;
+namespace Delta\Components\Routing\Contracts;
 
 
 interface RouteValidatorContract {

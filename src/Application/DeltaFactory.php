@@ -2,6 +2,8 @@
 
 namespace Delta\Application;
 
+use Delta\Application\Contracts\DeltaFactoryContract;
+
 
 final class DeltaFactory implements DeltaFactoryContract
 {

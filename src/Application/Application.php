@@ -2,6 +2,7 @@
 
 namespace Delta\Application;
 
+use Delta\Application\Contracts\ApplicationContract;
 use Delta\Application\Providers\ModuleLayerProvider;
 use Delta\Components\Routing\Router;
 use Delta\Components\Http\HttpBuilder;

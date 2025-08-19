@@ -1,6 +1,8 @@
 <?php
 
-namespace Delta\Components\Routing;
+namespace Delta\Components\Routing\Contracts;
+
+use Delta\Components\Routing\Route;
 
 
 interface RouteContentCreatorContract {

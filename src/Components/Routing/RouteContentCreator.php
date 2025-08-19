@@ -3,6 +3,7 @@
 namespace Delta\Components\Routing;
 
 use Delta\Components\Http\Request;
+use Delta\Components\Routing\Contracts\RouteContentCreatorContract;
 
 
 final class RouteContentCreator implements RouteContentCreatorContract

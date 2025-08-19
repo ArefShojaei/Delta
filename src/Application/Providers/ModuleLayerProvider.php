@@ -3,6 +3,7 @@
 namespace Delta\Application\Providers;
 
 use Delta\Application\Attributes\Module;
+use Delta\Application\Contracts\ModuleLayerProviderContract;
 use Delta\Application\Mixins\HasModulePropertyProcessor as HasPropertyProcessor;
 use Delta\Components\Reflection\Providers\ClassReflectionProvider;
 use Delta\Components\Routing\Router;

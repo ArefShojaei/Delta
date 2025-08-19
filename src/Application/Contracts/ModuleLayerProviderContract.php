@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Application\Providers;
+namespace Delta\Application\Contracts;
 
 
 interface ModuleLayerProviderContract

@@ -2,6 +2,7 @@
 
 namespace Delta\Components\Reflection;
 
+use Delta\Components\Reflection\Contracts\ReflectionProviderContract;
 use ReflectionClass;
 
 

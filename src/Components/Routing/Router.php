@@ -2,6 +2,8 @@
 
 namespace Delta\Components\Routing;
 
+use Delta\Components\Routing\Contracts\RouterContract;
+
 
 final class Router implements RouterContract
 {

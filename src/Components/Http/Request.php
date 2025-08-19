@@ -2,6 +2,8 @@
 
 namespace Delta\Components\Http;
 
+use Delta\Components\Http\Contracts\RequestContract;
+
 
 final class Request implements RequestContract
 {

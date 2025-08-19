@@ -1,6 +1,8 @@
 <?php
 
-namespace Delta\Application;
+namespace Delta\Application\Contracts;
+
+use Delta\Application\Application;
 
 
 interface DeltaFactoryContract {

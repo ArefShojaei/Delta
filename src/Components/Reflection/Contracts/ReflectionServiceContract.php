@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Components\Reflection;
+namespace Delta\Components\Reflection\Contracts;
 
 use ReflectionClass;
 use ReflectionMethod;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Components\Http;
+namespace Delta\Components\Http\Contracts;
 
 
 interface RequestContract
