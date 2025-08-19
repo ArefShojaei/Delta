@@ -23,8 +23,10 @@ final class Http
             $this->request->route()
         );
 
-        if (is_null($route) | !$route) {
-            echo "404 | Not Found";
+        if ($route->path !== $this->request->route()) {
+            http_response_code(404);
+            
+            echo $this->router->execute($route, []);
             
             return;
         }
