@@ -2,61 +2,24 @@
 
 namespace Delta\Application;
 
-use Delta\Application\Attributes\Module;
-use Delta\Components\Reflection\Providers\{
-    ClassReflectionProvider,
-    MethodReflectionProvider
-};
-use Delta\Components\Routing\Attributes\{
-    Controller,
-    Route
-};
+use Delta\Application\Providers\ModuleLayerProvider;
 use Delta\Components\Routing\Router;
 use Delta\Components\Http\HttpBuilder;
 
 
 final class Application implements ApplicationContract
 {
-    private object $router;
+    private Router $router;
+
 
     public function __construct(private string $app)
     {
-        $appModuleReflectionProvider = new ClassReflectionProvider($app, Module::class);
 
         $this->router = new Router;
 
-        $this->applyControllers($appModuleReflectionProvider);
-    }
-
-    private function applyControllers(object $module)
-    {
-        $controllers = $module->descriptor->options["controllers"];
-
-        foreach ($controllers as $controller) {
-            $controllerReflectionProvider = new ClassReflectionProvider($controller, Controller::class);
-
-            // * @MetaData
-            $prefix = "/" . ltrim($controllerReflectionProvider->descriptor->prefix, "/");
-
-
-            $methods = $controllerReflectionProvider->methods;
-
-            foreach ($methods as $method) {
-                $methodReflectionProvider = new MethodReflectionProvider($method, Route::class);
-
-                // * @MetaData
-                $httpMethod = $methodReflectionProvider->descriptor->method;
-
-                $path = $prefix . $methodReflectionProvider->descriptor->path;
-
-                $callback = $methodReflectionProvider->callback;
-
-                $this->router->addRoute($httpMethod, $path, $callback);
-
-
-                
-            }
-        }
+        $module = new ModuleLayerProvider($app, ["router" => $this->router]);
+    
+        $module->process();
     }
 
     public function run(): void

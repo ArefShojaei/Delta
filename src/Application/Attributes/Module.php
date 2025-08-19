@@ -8,7 +8,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 class Module
 {
-    public function __construct(public array $options)
+    public function __construct(public array $meta)
     {
     }
 }
