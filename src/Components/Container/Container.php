@@ -14,7 +14,7 @@ final class Container implements ContainerContract {
         $this->instances[$abstract] = $concrete;    
     }
 
-    public function resolve(string $abstract): null|object
+    public function resolve(string $abstract): ?object
     {
         if (!$this->has($abstract)) return null;
 
