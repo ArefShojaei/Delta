@@ -15,14 +15,14 @@ final class HttpBuilder implements HttpBuilderContract {
     private Router $router;
 
 
-    public function setRequest(): self {
-        $this->request = new Request($_SERVER);
+    public function setRequest(array $headers): self {
+        $this->request = HttpFactory::createRequest($headers);
 
         return $this;
     }
     
     public function setResponse(): self {
-        $this->response = new Response;
+        $this->response = HttpFactory::createResponse();
         
         return $this;
     }
@@ -34,8 +34,12 @@ final class HttpBuilder implements HttpBuilderContract {
     }
 
     public function build(): Http {
-        return new Http($this->request, $this->response, [
-            "router" => $this->router
-        ]);
+        $meta = ["router" => $this->router];
+
+        return HttpFactory::createHttp(
+            $this->request, 
+            $this->response, 
+            $meta
+        );
     }
 }

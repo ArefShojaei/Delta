@@ -15,6 +15,6 @@ interface RequestContract
     public function host(): string;
     public function port(): string;
     public function query(): array;
-    public function agnet(): string;
+    public function agent(): string;
     public function time(): int;
 }

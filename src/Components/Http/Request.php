@@ -87,7 +87,7 @@ final class Request implements RequestContract
         return $queries;
     }
 
-    public function agnet(): string
+    public function agent(): string
     {
         return $this->getHeader("HTTP_USER_AGENT");
     }
