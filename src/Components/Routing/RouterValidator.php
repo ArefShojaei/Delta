@@ -2,10 +2,10 @@
 
 namespace Delta\Components\Routing;
 
-use Delta\Components\Routing\Contracts\RouteValidatorContract;
+use Delta\Components\Routing\Contracts\RouterValidatorContract;
 
 
-final class RouteValidator implements RouteValidatorContract
+final class RouterValidator implements RouterValidatorContract
 {
     public function __construct(private array $routes)
     {

@@ -17,10 +17,8 @@ final class RouteContentCreator implements RouteContentCreatorContract
         );
     }
 
-    public static function createUnsupportedMethod(string $method): void
+    public static function createUnsupportedMethod(string $method): string
     {
-        $message = "[ERROR] Unsupported \"{$method}\" Http method!";
-
-        die($message);
+        return "[ERROR] Unsupported \"{$method}\" Http method!";
     }
 }

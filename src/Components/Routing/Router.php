@@ -31,9 +31,9 @@ final class Router implements RouterContract
 
     public function findRoute(string $method, string $path): Route
     {
-        $validator = new RouteValidator($this->routes);
+        $validator = new RouterValidator($this->routes);
 
-        if (!$validator->isMethodExists($method)) RouteContentCreator::createUnsupportedMethod($method);
+        if (!$validator->isMethodExists($method)) die(RouteContentCreator::createUnsupportedMethod($method));
 
         return !$validator->isPathExists($method, $path) ? RouteContentCreator::createFallback() : $this->getRouteFromRequest($method, $path);
     }
