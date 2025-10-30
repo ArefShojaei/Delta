@@ -36,10 +36,10 @@ class AppModule {}
 
 
 function bootstrap(string $appModule): void {
-  $app = DeltaFactory::createApp(AppModule::class);
+  $app = DeltaFactory::createApp($appModule);
 
   $app->run();
 }
 
-bootstrap(AppModule::class)
+bootstrap(AppModule::class);
 ```
