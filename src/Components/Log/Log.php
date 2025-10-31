@@ -5,7 +5,7 @@ namespace Delta\Components\Log;
 use Delta\Components\Log\Enums\LogLevelTypeEnum;
 
 
-final class Log 
+class Log 
 {
     protected function createMessage(string $message, LogLevelTypeEnum $type): string
     {
