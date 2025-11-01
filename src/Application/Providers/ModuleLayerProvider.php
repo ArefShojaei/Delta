@@ -16,10 +16,15 @@ final class ModuleLayerProvider implements LayerProviderContract
     use HasModuleControllersDispatcherMixin, HasModuleProvidersDispatcherMixin, 
         HasModuleImportsDispatcherMixin, HasModuleExportsDispatcherMixin 
         {
-            HasModuleControllersDispatcherMixin::dispatch as dispatchControllers;
-            HasModuleProvidersDispatcherMixin::dispatch as dispatchProviders;
-            HasModuleImportsDispatcherMixin::dispatch as dispatchImports;
-            HasModuleExportsDispatcherMixin::dispatch as dispatchExports;
+            HasModuleControllersDispatcherMixin::dispatch insteadof
+            HasModuleProvidersDispatcherMixin,
+            HasModuleImportsDispatcherMixin,
+            HasModuleExportsDispatcherMixin;
+
+            HasModuleControllersDispatcherMixin::dispatch as private dispatchControllers;
+            HasModuleProvidersDispatcherMixin::dispatch as private dispatchProviders;
+            HasModuleImportsDispatcherMixin::dispatch as private dispatchImports;
+            HasModuleExportsDispatcherMixin::dispatch as private dispatchExports;
         }
 
 
