@@ -2,33 +2,38 @@
 
 namespace Delta\Application\Providers;
 
-use Delta\Application\Attributes\Module;
-use Delta\Application\Contracts\ModuleLayerProviderContract;
-use Delta\Application\Mixins\HasModulePropertyProcessor as HasPropertyProcessor;
-use Delta\Components\Reflection\Providers\ClassReflectionProvider;
-use Delta\Components\Routing\Router;
+use Delta\Application\Contracts\LayerProviderContract;
+use Delta\Application\Mixins\Layers\Module\{
+    HasModuleControllersDispatcherMixin,
+    HasModuleExportsDispatcherMixin,
+    HasModuleImportsDispatcherMixin,
+    HasModuleProvidersDispatcherMixin
+};
 
 
-final class ModuleLayerProvider implements ModuleLayerProviderContract
+final class ModuleLayerProvider implements LayerProviderContract
 {
-    use HasPropertyProcessor;
+    use HasModuleControllersDispatcherMixin, HasModuleProvidersDispatcherMixin, 
+        HasModuleImportsDispatcherMixin, HasModuleExportsDispatcherMixin 
+        {
+            HasModuleControllersDispatcherMixin::dispatch as dispatchControllers;
+            HasModuleProvidersDispatcherMixin::dispatch as dispatchProviders;
+            HasModuleImportsDispatcherMixin::dispatch as dispatchImports;
+            HasModuleExportsDispatcherMixin::dispatch as dispatchExports;
+        }
 
-    private ClassReflectionProvider $module;
 
-    private Router $router;
-
-
-    public function __construct(string $module, array $meta)
+    public function __construct(private readonly string $module)
     {
-        $this->module = new ClassReflectionProvider($module, Module::class);
-
-        $this->router = $meta["router"];
     }
 
-
     public function process(): void {
-        $meta = $this->module->descriptor->meta;
-
-        $this->applyControllers(controllers: $meta["controllers"]);
+        $this->dispatchControllers();
+        
+        $this->dispatchProviders();
+        
+        $this->dispatchImports();
+        
+        $this->dispatchExports();
     }
 }

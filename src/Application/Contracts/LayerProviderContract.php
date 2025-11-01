@@ -3,7 +3,7 @@
 namespace Delta\Application\Contracts;
 
 
-interface ModuleLayerProviderContract
+interface LayerProviderContract
 {
     public function process(): void;
 }

@@ -12,27 +12,37 @@ use Delta\Components\Http\Response;
 final class Application implements ApplicationContract
 {
     private Router $router;
-
-
-    public function __construct(private readonly string $appModule)
-    {
-        $this->router = new Router;
-
-        $module = new ModuleLayerProvider($appModule, ["router" => $this->router]);
     
-        $module->process();
+    private HttpBuilder $httpBuilder;
+
+    private array $httpHeaders;
+
+
+    public function __construct(string $module, private readonly array $meta)
+    {
+        $this->router = $meta["router"];
+
+        $this->httpBuilder = $meta["http"]["builder"];
+        
+        $this->httpHeaders = $meta["http"]["headers"];
+    
+        $moduleLayer = new ModuleLayerProvider($module);
+    
+        $moduleLayer->process();
+        
+        exit;
     }
 
     public function run(): void
     {
         try {
-            $httpBuilder = (new HttpBuilder)
-                ->setRequest($_SERVER)
-                ->setResponse()
+            $http = $this->httpBuilder
                 ->setRouter($this->router)
+                ->setRequest($this->httpHeaders)
+                ->setResponse()
                 ->build();
 
-            $httpBuilder->listen();
+            $http->listen();
         } catch (\Exception $e) {
             http_response_code(Response::HTTP_INTERNAL_SERVER_ERROR);
 
