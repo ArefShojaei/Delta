@@ -5,5 +5,5 @@ namespace Delta\Application\Mixins\Layers\Module;
 
 trait HasModuleProvidersDispatcherMixin
 {
-    private function dispatch() {}    
+    private function dispatch(array $providers) {}    
 }

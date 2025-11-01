@@ -7,6 +7,7 @@ use Delta\Application\Mixins\Layers\Module\{
     HasModuleControllersDispatcherMixin,
     HasModuleExportsDispatcherMixin,
     HasModuleImportsDispatcherMixin,
+    HasModuleLayerAttributeGetterMixin,
     HasModuleProvidersDispatcherMixin
 };
 
@@ -26,19 +27,21 @@ final class ModuleLayerProvider implements LayerProviderContract
             HasModuleImportsDispatcherMixin::dispatch as private dispatchImports;
             HasModuleExportsDispatcherMixin::dispatch as private dispatchExports;
         }
-
+    
+    use HasModuleLayerAttributeGetterMixin;
+    
 
     public function __construct(private readonly string $module)
     {
     }
 
     public function process(): void {
-        $this->dispatchControllers();
+        $this->dispatchControllers($this->getAttributeControllers());
         
-        $this->dispatchProviders();
+        $this->dispatchProviders($this->getAttributeProviders());
         
-        $this->dispatchImports();
+        $this->dispatchImports($this->getAttributeImports());
         
-        $this->dispatchExports();
+        $this->dispatchExports($this->getAttributeExports());
     }
 }
