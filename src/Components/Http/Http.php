@@ -19,6 +19,11 @@ final class Http implements IHttp
         $this->router = $meta["router"];
     }
 
+    public static function getHeaders(): array
+    {
+        return $_SERVER;
+    }
+
     public function listen(): void
     {
         $route = $this->router->findRoute(
