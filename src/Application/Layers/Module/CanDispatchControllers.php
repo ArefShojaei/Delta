@@ -1,15 +1,17 @@
 <?php
 
-namespace Delta\Application\Mixins\Layers\Module;
+namespace Delta\Application\Layers\Module;
 
-use Delta\Components\Routing\Attributes\Controller;
-use Delta\Components\Routing\Attributes\Route;
+use Delta\Components\Routing\Attributes\{
+    Controller,
+    Route
+};
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 
 
-trait HasModuleControllersDispatcherMixin
+trait CanDispatchControllers
 {
     private function getPrefix(ReflectionClass $reflection): ?string
     {

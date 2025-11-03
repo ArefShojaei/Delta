@@ -1,12 +1,12 @@
 <?php
 
-namespace Delta\Application\Mixins\Layers\Module;
+namespace Delta\Application\Layers\Module;
 
 use Delta\Application\Attributes\Module;
 use ReflectionClass;
 
 
-trait HasModuleLayerAttributeGetterMixin
+trait CanGetAttribute
 {
     private function getAttribute(): Module {
         $moduleReflection = new ReflectionClass($this->module);

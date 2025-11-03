@@ -3,32 +3,32 @@
 namespace Delta\Application\Providers;
 
 use Delta\Application\Contracts\LayerProviderContract;
-use Delta\Application\Mixins\Layers\Module\{
-    HasModuleControllersDispatcherMixin,
-    HasModuleExportsDispatcherMixin,
-    HasModuleImportsDispatcherMixin,
-    HasModuleLayerAttributeGetterMixin,
-    HasModuleProvidersDispatcherMixin
+use Delta\Application\Layers\Module\{
+    CanDispatchControllers,
+    CanDispatchProviders,
+    CanDispatchImports,
+    CanDispatchExports,
+    CanGetAttribute
 };
 
 
 final class ModuleLayerProvider implements LayerProviderContract
 {
-    use HasModuleControllersDispatcherMixin, HasModuleProvidersDispatcherMixin, 
-        HasModuleImportsDispatcherMixin, HasModuleExportsDispatcherMixin 
+    use CanDispatchControllers, CanDispatchProviders, 
+        CanDispatchImports, CanDispatchExports 
         {
-            HasModuleControllersDispatcherMixin::dispatch insteadof
-            HasModuleProvidersDispatcherMixin,
-            HasModuleImportsDispatcherMixin,
-            HasModuleExportsDispatcherMixin;
+            CanDispatchControllers::dispatch insteadof
+            CanDispatchProviders,
+            CanDispatchImports,
+            CanDispatchExports;
 
-            HasModuleControllersDispatcherMixin::dispatch as private dispatchControllers;
-            HasModuleProvidersDispatcherMixin::dispatch as private dispatchProviders;
-            HasModuleImportsDispatcherMixin::dispatch as private dispatchImports;
-            HasModuleExportsDispatcherMixin::dispatch as private dispatchExports;
+            CanDispatchControllers::dispatch as private dispatchControllers;
+            CanDispatchProviders::dispatch as private dispatchProviders;
+            CanDispatchImports::dispatch as private dispatchImports;
+            CanDispatchExports::dispatch as private dispatchExports;
         }
     
-    use HasModuleLayerAttributeGetterMixin;
+    use CanGetAttribute;
     
 
     public function __construct(private readonly string $module)
