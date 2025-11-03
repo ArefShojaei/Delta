@@ -1,8 +1,13 @@
 <?php
 
-namespace Delta\Components\Http;
+namespace Delta\Components\Http\Factory;
 
-use Delta\Components\Http\Interfaces\HttpFactory as IHttpFactory;
+use Delta\Components\Http\{
+    Interfaces\HttpFactory as IHttpFactory,
+    Http,
+    Request,
+    Response,
+};
 
 
 final class HttpFactory implements IHttpFactory
@@ -14,11 +19,14 @@ final class HttpFactory implements IHttpFactory
 
     public static function createResponse(): Response
     {
-        return new Response;
+        return new Response();
     }
 
-    public static function createHttp(Request $request, Response $response, array $meta): Http
-    {
+    public static function createHttp(
+        Request $request,
+        Response $response,
+        array $meta,
+    ): Http {
         return new Http($request, $response, $meta);
     }
 }

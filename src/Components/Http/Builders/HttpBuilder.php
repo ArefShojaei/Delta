@@ -1,11 +1,14 @@
 <?php
 
-namespace Delta\Components\Http;
+namespace Delta\Components\Http\Builders;
 
-use Delta\Components\Http\Interfaces\HttpBuilder as IHttpBuilder;
-use Delta\Components\{
-    Http\Response,
-    Routing\Router
+use Delta\Components\Routing\Router;
+use Delta\Components\Http\{
+    Response,
+    Request,
+    Http,
+    Factory\HttpFactory,
+    Interfaces\HttpBuilder as IHttpBuilder,
 };
 
 
@@ -17,32 +20,32 @@ final class HttpBuilder implements IHttpBuilder
 
     private Router $router;
 
-
-    public function setRequest(array $headers): self {
+    
+    public function setRequest(array $headers): self
+    {
         $this->request = HttpFactory::createRequest($headers);
 
         return $this;
     }
-    
-    public function setResponse(): self {
+
+    public function setResponse(): self
+    {
         $this->response = HttpFactory::createResponse();
-        
+
         return $this;
     }
 
-    public function setRouter(Router $router): self {
+    public function setRouter(Router $router): self
+    {
         $this->router = $router;
 
         return $this;
     }
 
-    public function build(): Http {
+    public function build(): Http
+    {
         $meta = ["router" => $this->router];
 
-        return HttpFactory::createHttp(
-            $this->request, 
-            $this->response, 
-            $meta
-        );
+        return HttpFactory::createHttp($this->request, $this->response, $meta);
     }
 }

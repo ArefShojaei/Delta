@@ -3,10 +3,13 @@
 namespace Delta\Components\Log\Enums;
 
 
-enum LogLevelTypeEnum
+enum LogLevelType
 {
     case INFO;
+    
     case WARN;
+    
     case ERROR;
+    
     case SUCCESS;
 }

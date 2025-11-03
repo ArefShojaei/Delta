@@ -5,7 +5,7 @@ namespace Delta\Components\Http\Builders;
 use Delta\Components\Http\{
     Builders\ResponseBuilder as IResponseBuilder,
     HttpStatus,
-    Response
+    Response,
 };
 
 
@@ -13,16 +13,16 @@ final class ResponseBuilder implements IResponseBuilder
 {
     private Response $response;
 
-
+    
     public function __construct()
     {
-        $this->response = new Response;        
+        $this->response = new Response();
     }
 
     public function setHeader(string $key, string $value): self
     {
         $this->response->header($key, $value);
-        
+
         return $this;
     }
 
@@ -31,7 +31,7 @@ final class ResponseBuilder implements IResponseBuilder
         foreach ($headers as $key => $value) {
             $this->response->header($key, $value);
         }
-        
+
         return $this;
     }
 

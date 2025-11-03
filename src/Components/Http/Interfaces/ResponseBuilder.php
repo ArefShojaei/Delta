@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Components\Http\Builders;
+namespace Delta\Components\Http\Interfaces;
 
 use Delta\Components\Http\Response;
 

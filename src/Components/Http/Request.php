@@ -4,7 +4,7 @@ namespace Delta\Components\Http;
 
 use Delta\Components\Http\{
     Interfaces\Request as IRequest,
-    Enums\HttpRequestHeader
+    Enums\HttpRequestHeader,
 };
 
 
@@ -12,22 +12,22 @@ final class Request implements IRequest
 {
     public const READABLE = "GET";
 
-    public const CREATABLE  = "POST";
+    public const CREATABLE = "POST";
 
     public const UPDATEABLE = "PUT";
 
     public const EDITABLE = "PATCH";
 
-    public const DELETABLE  = "DELETE";
+    public const DELETABLE = "DELETE";
 
-
-    public function __construct(private array $headers)
-    {
-    }
+    
+    public function __construct(private array $headers) {}
 
     public function header(string|HttpRequestHeader $key): ?string
     {
-        if ($key instanceof HttpRequestHeader) $this->headers[$key->value] ?? null;
+        if ($key instanceof HttpRequestHeader) {
+            $this->headers[$key->value] ?? null;
+        }
 
         return $this->headers[$key] ?? null;
     }
@@ -71,7 +71,9 @@ final class Request implements IRequest
     {
         $params = [];
 
-        if (!$this->header(HttpRequestHeader::QUERY)) return $params;
+        if (!$this->header(HttpRequestHeader::QUERY)) {
+            return $params;
+        }
 
         $inputs = explode("&", $this->header(HttpRequestHeader::QUERY));
 

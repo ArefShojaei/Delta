@@ -2,19 +2,21 @@
 
 namespace Delta\Components\Http;
 
-use Delta\Components\Http\Interfaces\Http as IHttp;
-use Delta\Components\Routing\Router;
+use Delta\Components\{
+    Http\Interfaces\Http as IHttp,
+    Routing\Router
+};
 
 
 final class Http implements IHttp
 {
     private Router $router;
 
-
+    
     public function __construct(
         private Request $request,
         private Response $response,
-        private array $meta
+        private array $meta,
     ) {
         $this->router = $meta["router"];
     }
@@ -28,14 +30,14 @@ final class Http implements IHttp
     {
         $route = $this->router->findRoute(
             $this->request->method(),
-            $this->request->route()
+            $this->request->route(),
         );
 
         if ($route->path !== $this->request->route()) {
             http_response_code(404);
-            
+
             echo $this->router->execute($route, []);
-            
+
             return;
         }
 

@@ -2,17 +2,19 @@
 
 namespace Delta\Components\Log;
 
-use Delta\Components\Log\Enums\LogLevelTypeEnum;
+use Delta\Components\Log\Enums\LogLevelType;
 
 
-class Log 
+class Log
 {
-    protected function createMessage(string $message, LogLevelTypeEnum $type): string
-    {
+    protected function createMessage(
+        string $message,
+        LogLevelType $type,
+    ): string {
         return "[" . $this->getType($type) . "] {$message}" . PHP_EOL;
     }
 
-    private function getType(LogLevelTypeEnum $type): string
+    private function getType(LogLevelType $type): string
     {
         return strtoupper($type->name);
     }
