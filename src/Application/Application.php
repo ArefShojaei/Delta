@@ -4,6 +4,7 @@ namespace Delta\Application;
 
 use Delta\Application\Contracts\ApplicationContract;
 use Delta\Application\Providers\ModuleLayerProvider;
+use Delta\Components\Http\Builders\ResponseBuilder;
 use Delta\Components\Routing\Router;
 use Delta\Components\Http\HttpBuilder;
 use Delta\Components\Http\Response;
@@ -44,12 +45,18 @@ final class Application implements ApplicationContract
 
             $http->listen();
         } catch (\Exception $e) {
-            http_response_code(Response::HTTP_INTERNAL_SERVER_ERROR);
-
-            echo json_encode([
+            $body = [
                 "code" => Response::HTTP_INTERNAL_SERVER_ERROR,
-                "error" => $e->getMessage(),
-            ]);
+                "message" => $e->getMessage(),
+            ];
+
+            $response = (new ResponseBuilder)
+                ->setStatus(Response::HTTP_INTERNAL_SERVER_ERROR)
+                ->setHeader("Content-type", "application/json")
+                ->setBody($body)
+                ->build();
+
+            $response->send();
         }
     }
 }
