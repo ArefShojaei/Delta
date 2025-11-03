@@ -18,9 +18,7 @@ final class Container implements IContainer
 
     public function resolve(string $abstract): ?object
     {
-        if (!$this->has($abstract)) {
-            return null;
-        }
+        if (!$this->has($abstract)) return null;
 
         $concrete = $this->instances[$abstract];
 

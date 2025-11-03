@@ -1,8 +1,9 @@
 <?php
 
-namespace Delta\Common\Contracts;
+namespace Delta\Common\Interfaces;
 
 
-interface SingletonContract {
+interface Singleton
+{
     public static function getInstance(): self;
 }
