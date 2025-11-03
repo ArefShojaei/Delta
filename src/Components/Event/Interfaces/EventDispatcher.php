@@ -1,11 +1,13 @@
 <?php
 
-namespace Delta\Components\Event\Contracts;
+namespace Delta\Components\Event\Interfaces;
 
 use Closure;
 
 
-interface EventDispatcherContract {
+interface EventDispatcher
+{
     public function addListener(string $event, Closure $listener): void;
+
     public function dispatch(string $event, mixed $data = []): void;
 }

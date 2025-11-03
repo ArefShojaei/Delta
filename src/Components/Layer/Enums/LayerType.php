@@ -3,9 +3,11 @@
 namespace Delta\Components\Layer\Enums;
 
 
-enum LayerTypeEnum: string
+enum LayerType: string
 {
     case MODULE = "module";
+    
     case CONTROLLER = "controller";
+    
     case SERVICE = "service";
 }

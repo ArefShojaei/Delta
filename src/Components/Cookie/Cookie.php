@@ -5,7 +5,8 @@ namespace Delta\Components\Cookie;
 use Delta\Components\Cookie\Interfaces\Cookie as ICookie;
 
 
-final class Cookie implements ICookie {
+final class Cookie implements ICookie
+{
     public static function set(string $key, string $value): void
     {
         $_COOKIE[$key] = $value;

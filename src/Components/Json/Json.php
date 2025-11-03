@@ -11,9 +11,8 @@ final class Json implements IJson
     {
         return json_encode($body, JSON_UNESCAPED_UNICODE);
     }
-    
-    public static function decode(string $body, $associative = false): array|object
-    {
+
+    public static function decode(string $body, bool $associative = false): array|object {
         return json_decode($body, $associative);
     }
-} 
+}

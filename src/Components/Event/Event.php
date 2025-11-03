@@ -5,13 +5,12 @@ namespace Delta\Components\Event;
 use Closure;
 
 
-final class Event {
+final class Event
+{
     public function __construct(
         private string $name,
-        private Closure $callback
-    )
-    {
-    }
+        private Closure $callback,
+    ) {}
 
     public function __get($name)
     {

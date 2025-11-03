@@ -2,25 +2,31 @@
 
 namespace Delta\Components\Container;
 
+use Delta\Components\Container\Container as IContainer;
 use Closure;
 
 
-final class Container implements ContainerContract {
+final class Container implements IContainer
+{
     private array $instances = [];
-    
 
-    public function bind(string $abstract, string|Closure $concrete): void 
+    
+    public function bind(string $abstract, string|Closure $concrete): void
     {
-        $this->instances[$abstract] = $concrete;    
+        $this->instances[$abstract] = $concrete;
     }
 
     public function resolve(string $abstract): ?object
     {
-        if (!$this->has($abstract)) return null;
+        if (!$this->has($abstract)) {
+            return null;
+        }
 
         $concrete = $this->instances[$abstract];
 
-        return $concrete instanceof Closure ? $concrete($this) : new $concrete;
+        return $concrete instanceof Closure
+            ? $concrete($this)
+            : new $concrete();
     }
 
     public function getInstances(): array
