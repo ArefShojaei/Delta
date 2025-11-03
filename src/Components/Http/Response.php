@@ -2,8 +2,11 @@
 
 namespace Delta\Components\Http;
 
+use Delta\Components\Http\Response as IResponse;
+use Delta\Components\Json\Json;
 
-final class Response
+
+final class Response implements IResponse
 {
     public const HTTP_CONTINUE = 100;
     public const HTTP_SWITCHING_PROTOCOLS = 101;
@@ -69,5 +72,19 @@ final class Response
     public const HTTP_NOT_EXTENDED = 510;                                                // RFC2774
     public const HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
 
+    private array $body;
 
+
+    public function setBody(array $body): void {
+        $this->body = $body;
+    }
+
+    public function getBody(): array {
+        return $this->body;
+    }
+    
+    public function send(): void
+    {
+        echo Json::encode($this->getBody());
+    }
 }
