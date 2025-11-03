@@ -5,5 +5,5 @@ namespace Delta\Application\Layers\Module;
 
 trait CanDispatchProviders
 {
-    private function dispatch(array $providers) {}    
+    private function dispatch(array $providers) {}
 }

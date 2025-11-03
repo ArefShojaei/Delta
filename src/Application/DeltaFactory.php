@@ -11,7 +11,7 @@ final class DeltaFactory implements IDeltaFactory
     public static function createApp(string $appModule): Application
     {
         $meta = [
-            "router" => new Router,
+            "router" => new Router(),
         ];
 
         return new Application($appModule, $meta);

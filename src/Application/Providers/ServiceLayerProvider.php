@@ -5,13 +5,9 @@ namespace Delta\Application\Providers;
 use Delta\Application\Interfaces\LayerProvider as ILayerProvider;
 
 
-final class ServiceLayerProvider implements ILayerProvider 
+final class ServiceLayerProvider implements ILayerProvider
 {
-    public function __construct(private readonly string $module)
-    {
-    }
+    public function __construct(private readonly string $module) {}
 
-    public function process(): void
-    {
-    }
+    public function process(): void {}
 }

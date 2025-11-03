@@ -8,33 +8,38 @@ use ReflectionClass;
 
 trait CanGetAttribute
 {
-    private function getAttribute(): Module {
+    private function getAttribute(): Module
+    {
         $moduleReflection = new ReflectionClass($this->module);
-    
+
         $attributes = $moduleReflection->getAttributes(Module::class);
-        
+
         return current($attributes)->newInstance();
     }
 
-    private function getAttributeControllers(): array {
+    private function getAttributeControllers(): array
+    {
         $meta = $this->getAttribute()->meta;
 
         return $meta["controllers"];
     }
 
-    private function getAttributeProviders(): array {
+    private function getAttributeProviders(): array
+    {
         $meta = $this->getAttribute()->meta;
 
         return $meta["providers"];
     }
 
-    private function getAttributeImports(): array {
+    private function getAttributeImports(): array
+    {
         $meta = $this->getAttribute()->meta;
 
         return $meta["imports"];
     }
 
-    private function getAttributeExports(): array {
+    private function getAttributeExports(): array
+    {
         $meta = $this->getAttribute()->meta;
 
         return $meta["exports"];

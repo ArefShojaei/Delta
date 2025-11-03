@@ -8,40 +8,36 @@ use Delta\Application\Layers\Module\{
     CanDispatchProviders,
     CanDispatchImports,
     CanDispatchExports,
-    CanGetAttribute
+    CanGetAttribute,
 };
 
 
 final class ModuleLayerProvider implements ILayerProvider
 {
-    use CanDispatchControllers, CanDispatchProviders, 
-        CanDispatchImports, CanDispatchExports 
-        {
-            CanDispatchControllers::dispatch insteadof
-            CanDispatchProviders,
-            CanDispatchImports,
-            CanDispatchExports;
+    use CanDispatchControllers,
+        CanDispatchProviders,
+        CanDispatchImports,
+        CanDispatchExports {
+        CanDispatchControllers::dispatch insteadof CanDispatchProviders, CanDispatchImports, CanDispatchExports;
 
-            CanDispatchControllers::dispatch as private dispatchControllers;
-            CanDispatchProviders::dispatch as private dispatchProviders;
-            CanDispatchImports::dispatch as private dispatchImports;
-            CanDispatchExports::dispatch as private dispatchExports;
-        }
-    
-    use CanGetAttribute;
-    
-
-    public function __construct(private readonly string $module)
-    {
+        CanDispatchControllers::dispatch as private dispatchControllers;
+        CanDispatchProviders::dispatch as private dispatchProviders;
+        CanDispatchImports::dispatch as private dispatchImports;
+        CanDispatchExports::dispatch as private dispatchExports;
     }
 
-    public function process(): void {
+    use CanGetAttribute;
+
+    public function __construct(private readonly string $module) {}
+
+    public function process(): void
+    {
         $this->dispatchControllers($this->getAttributeControllers());
-        
+
         $this->dispatchProviders($this->getAttributeProviders());
-        
+
         $this->dispatchImports($this->getAttributeImports());
-        
+
         $this->dispatchExports($this->getAttributeExports());
     }
 }
