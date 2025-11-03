@@ -1,6 +1,6 @@
 {
     "name": "arefshojaei/delta",
-    "description": "",
+    "description": " A Powerful PHP Framework for REST API",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -10,8 +10,12 @@
     "authors": [
         {
             "name": "ArefShojaei",
-            "email": "arefshojaei82dev@gmail.com"
+            "email": "arefshojaei82@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "arefshojaei/kitdash": "^1.4",
+        "arefshojaei/redux": "^2.3",
+        "arefshojaei/class-validator": "^1.4"
+    }
 }
