@@ -2,23 +2,16 @@
 
 namespace Delta\Application;
 
-use Delta\Application\Contracts\DeltaFactoryContract;
-use Delta\Components\{
-    Http\HttpBuilder,
-    Routing\Router
-};
+use Delta\Application\Interfaces\DeltaFactory as IDeltaFactory;
+use Delta\Components\Routing\Router;
 
 
-final class DeltaFactory implements DeltaFactoryContract
+final class DeltaFactory implements IDeltaFactory
 {
     public static function createApp(string $appModule): Application
     {
         $meta = [
             "router" => new Router,
-            "http" => [
-                "headers" => $_SERVER,
-                "builder" => new HttpBuilder
-            ]
         ];
 
         return new Application($appModule, $meta);

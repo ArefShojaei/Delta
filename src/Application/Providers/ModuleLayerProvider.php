@@ -2,7 +2,7 @@
 
 namespace Delta\Application\Providers;
 
-use Delta\Application\Contracts\LayerProviderContract;
+use Delta\Application\Interfaces\LayerProvider as ILayerProvider;
 use Delta\Application\Layers\Module\{
     CanDispatchControllers,
     CanDispatchProviders,
@@ -12,7 +12,7 @@ use Delta\Application\Layers\Module\{
 };
 
 
-final class ModuleLayerProvider implements LayerProviderContract
+final class ModuleLayerProvider implements ILayerProvider
 {
     use CanDispatchControllers, CanDispatchProviders, 
         CanDispatchImports, CanDispatchExports 

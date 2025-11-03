@@ -1,10 +1,11 @@
 <?php
 
-namespace Delta\Application\Contracts;
+namespace Delta\Application\Interfaces;
 
 use Delta\Application\Application;
 
 
-interface DeltaFactoryContract {
+interface DeltaFactory
+{
     public static function createApp(string $appModule): Application;
 }

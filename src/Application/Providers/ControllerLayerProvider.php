@@ -2,10 +2,10 @@
 
 namespace Delta\Application\Providers;
 
-use Delta\Application\Contracts\LayerProviderContract;
+use Delta\Application\Interfaces\LayerProvider as ILayerProvider;
 
 
-final class ControllerLayerProvider implements LayerProviderContract 
+final class ControllerLayerProvider implements ILayerProvider 
 {
     public function __construct(private readonly string $module)
     {
