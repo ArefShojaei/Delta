@@ -2,10 +2,11 @@
 
 namespace Delta\Components\Http\Builders;
 
-use Delta\Components\Session\Session;
-use Delta\Components\Cookie\Interfaces\Cookie;
-use Delta\Components\Http\Builders\ResponseBuilder as IResponseBuilder;
-use Delta\Components\Http\Response;
+use Delta\Components\Http\{
+    Builders\ResponseBuilder as IResponseBuilder,
+    HttpStatus,
+    Response
+};
 
 
 final class ResponseBuilder implements IResponseBuilder
@@ -20,7 +21,7 @@ final class ResponseBuilder implements IResponseBuilder
 
     public function setHeader(string $key, string $value): self
     {
-        header("{$key}: {$value}");
+        $this->response->header($key, $value);
         
         return $this;
     }
@@ -28,36 +29,36 @@ final class ResponseBuilder implements IResponseBuilder
     public function setHeaders(array $headers): self
     {
         foreach ($headers as $key => $value) {
-            header("{$key}: {$value}");
+            $this->response->header($key, $value);
         }
         
         return $this;
     }
 
-    public function setStatus(Response|int $code): self
+    public function setStatus(Response|HttpStatus|int $code): self
     {
-        http_response_code($code);
+        $this->response->status($code);
 
         return $this;
     }
 
     public function setCookie(string $key, string $value): self
     {
-        Cookie::set($key, $value);
+        $this->response->cookie($key, $value);
 
         return $this;
     }
 
     public function setSession(string $key, string $value): self
     {
-        Session::set($key, $value);
+        $this->response->session($key, $value);
 
         return $this;
     }
 
     public function setBody(array $body): self
     {
-        $this->response->setBody($body);
+        $this->response->body($body);
 
         return $this;
     }

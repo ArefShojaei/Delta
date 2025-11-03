@@ -7,7 +7,7 @@ use Delta\Components\Http\Enums\HttpRequestHeader;
 
 interface Request
 {
-    public function header(string|HttpRequestHeader $name): ?string;
+    public function header(string|HttpRequestHeader $key): ?string;
 
     public function headers(): array;
 

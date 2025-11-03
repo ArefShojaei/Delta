@@ -25,11 +25,11 @@ final class Request implements IRequest
     {
     }
 
-    public function header(string|HttpRequestHeader $name): ?string
+    public function header(string|HttpRequestHeader $key): ?string
     {
-        if ($name instanceof HttpRequestHeader) $this->headers[$name->value] ?? null;
+        if ($key instanceof HttpRequestHeader) $this->headers[$key->value] ?? null;
 
-        return $this->headers[$name] ?? null;
+        return $this->headers[$key] ?? null;
     }
 
     public function headers(): array
