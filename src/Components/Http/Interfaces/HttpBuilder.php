@@ -1,15 +1,18 @@
 <?php
 
-namespace Delta\Components\Http\Contracts;
+namespace Delta\Components\Http\Interfaces;
 
 use Delta\Components\Http\Http;
 use Delta\Components\Routing\Router;
 
 
-interface HttpBuilderContract
+interface HttpBuilder
 {
     public function setRequest(array $headers): self;
+    
     public function setResponse(): self;
+    
     public function setRouter(Router $router): self;
+    
     public function build(): Http;
 }

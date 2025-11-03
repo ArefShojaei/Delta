@@ -2,13 +2,14 @@
 
 namespace Delta\Components\Http;
 
-use Delta\Components\Http\Contracts\HttpContract;
+use Delta\Components\Http\Interfaces\Http as IHttp;
 use Delta\Components\Routing\Router;
 
 
-final class Http implements HttpContract
+final class Http implements IHttp
 {
     private Router $router;
+
 
     public function __construct(
         private Request $request,
@@ -18,7 +19,8 @@ final class Http implements HttpContract
         $this->router = $meta["router"];
     }
 
-    public function listen(): void {
+    public function listen(): void
+    {
         $route = $this->router->findRoute(
             $this->request->method(),
             $this->request->route()

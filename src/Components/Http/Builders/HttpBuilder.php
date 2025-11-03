@@ -2,12 +2,15 @@
 
 namespace Delta\Components\Http;
 
-use Delta\Components\Http\Contracts\HttpBuilderContract;
-use Delta\Components\Http\Response;
-use Delta\Components\Routing\Router;
+use Delta\Components\Http\Interfaces\HttpBuilder as IHttpBuilder;
+use Delta\Components\{
+    Http\Response,
+    Routing\Router
+};
 
 
-final class HttpBuilder implements HttpBuilderContract {
+final class HttpBuilder implements IHttpBuilder
+{
     private Request $request;
 
     private Response $response;

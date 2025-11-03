@@ -2,10 +2,13 @@
 
 namespace Delta\Components\Http;
 
-use Delta\Components\Http\Contracts\RequestContract;
+use Delta\Components\Http\{
+    Interfaces\Request as IRequest,
+    Enums\HttpRequestHeader
+};
 
 
-final class Request implements RequestContract
+final class Request implements IRequest
 {
     public const READABLE = "GET";
 
@@ -22,9 +25,11 @@ final class Request implements RequestContract
     {
     }
 
-    private function getHeader(string $name): string
+    public function header(string|HttpRequestHeader $name): ?string
     {
-        return $this->headers[$name];
+        if ($name instanceof HttpRequestHeader) $this->headers[$name->value] ?? null;
+
+        return $this->headers[$name] ?? null;
     }
 
     public function headers(): array
@@ -34,66 +39,63 @@ final class Request implements RequestContract
 
     public function method(): string
     {
-        return $this->getHeader("REQUEST_METHOD");
+        return $this->header(HttpRequestHeader::METHOD);
     }
 
-    public function url(): string
+    public function path(): string
     {
-        return $this->getHeader("REQUEST_URI");
+        return $this->header(HttpRequestHeader::PATH);
     }
 
     public function route(): string
     {
-        return $this->getHeader("PHP_SELF");
+        return $this->header(HttpRequestHeader::ROUTE);
     }
 
     public function ip(): string
     {
-        return $this->getHeader("REMOTE_ADDR");
+        return $this->header(HttpRequestHeader::IP);
     }
 
     public function protocol(): string
     {
-        return $this->getHeader("SERVER_PROTOCOL");
+        return $this->header(HttpRequestHeader::PROTOCOL);
     }
 
     public function domain(): string
     {
-        return $this->getHeader("SERVER_NAME");
-    }
-
-    public function host(): string
-    {
-        return $this->getHeader("HTTP_HOST");
-    }
-
-    public function port(): string
-    {
-        return $this->getHeader("SERVER_NAME");
+        return $this->header(HttpRequestHeader::DOMAIN);
     }
 
     public function query(): array
     {
-        $queries = [];
+        $params = [];
 
-        $inputs = explode("&", $this->getHeader("QUERY_STRING"));
+        if (!$this->header(HttpRequestHeader::QUERY)) return $params;
+
+        $inputs = explode("&", $this->header(HttpRequestHeader::QUERY));
 
         foreach ($inputs as $input) {
             [$key, $value] = explode("=", $input);
 
-            $queries[$key] = $value;
+            $params[$key] = $value;
         }
 
-        return $queries;
+        return $params;
     }
 
     public function agent(): string
     {
-        return $this->getHeader("HTTP_USER_AGENT");
+        return $this->header(HttpRequestHeader::AGENT);
     }
 
     public function time(): int
     {
-        return (int) $this->getHeader("REQUEST_TIME");
+        return (int) $this->header(HttpRequestHeader::TIME);
+    }
+
+    public function host(): string
+    {
+        return (int) $this->header(HttpRequestHeader::HOST);
     }
 }

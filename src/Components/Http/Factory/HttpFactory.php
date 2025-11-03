@@ -2,10 +2,11 @@
 
 namespace Delta\Components\Http;
 
-use Delta\Components\Http\Contracts\HttpFactoryContract;
+use Delta\Components\Http\Interfaces\HttpFactory as IHttpFactory;
 
 
-final class HttpFactory implements HttpFactoryContract {
+final class HttpFactory implements IHttpFactory
+{
     public static function createRequest(array $headers): Request
     {
         return new Request($headers);
@@ -16,7 +17,8 @@ final class HttpFactory implements HttpFactoryContract {
         return new Response;
     }
 
-    public static function createHttp(Request $request, Response $response, array $meta): Http {
+    public static function createHttp(Request $request, Response $response, array $meta): Http
+    {
         return new Http($request, $response, $meta);
     }
 }
