@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Application\Enums;
+namespace Delta\Components\Layer\Enums;
 
 
 enum LayerTypeEnum: string

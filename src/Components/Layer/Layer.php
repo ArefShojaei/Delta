@@ -1,15 +1,18 @@
 <?php
 
-namespace Delta\Application;
+namespace Delta\Components\Layer;
 
-use Delta\Application\{
-    Contracts\LayerProviderContract,
-    Enums\LayerTypeEnum
+use Delta\Components\Layer\Contracts\{
+    LayerContract,
+    LayerProviderContract
 };
+use Delta\Components\Layer\Enums\LayerTypeEnum;
 
 
-final class Layer
+final class Layer implements LayerContract
 {
+    private const NAMESPACE = "Delta\\Application\\Providers\\";
+    
     private LayerProviderContract $layerProviderInstance;
 
 
@@ -19,7 +22,7 @@ final class Layer
 
         $layerProvider = "{$type}LayerProvider";
 
-        $namespace = "Delta\\Application\\Providers\\" . $layerProvider;
+        $namespace = self::NAMESPACE . $layerProvider;
     
         $this->layerProviderInstance = new $namespace($class);
     }

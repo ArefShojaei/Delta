@@ -1,12 +1,15 @@
 <?php
 
-namespace Delta\Application;
+namespace Delta\Components\Layer;
 
-use Delta\Application\Contracts\LayerProviderContract;
-use Delta\Application\Enums\LayerTypeEnum;
+use Delta\Components\Layer\Contracts\{
+    LayerFactoryContract,
+    LayerProviderContract
+};
+use Delta\Components\Layer\Enums\LayerTypeEnum;
 
 
-final class LayerFactory
+final class LayerFactory implements LayerFactoryContract
 {
     public static function createModuleLayer(string $class): LayerProviderContract
     {
