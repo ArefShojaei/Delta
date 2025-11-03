@@ -1,9 +1,11 @@
 <?php
 
-namespace Delta\Components\Routing\Contracts;
+namespace Delta\Components\Routing\Interfaces;
 
 
-interface RouterValidatorContract {
+interface RouterValidator
+{
     public function isMethodExists(string $method): bool;
+    
     public function isPathExists(string $method, string $path): bool;
 }

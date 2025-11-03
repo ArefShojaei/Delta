@@ -2,20 +2,23 @@
 
 namespace Delta\Components\Routing;
 
-use Delta\Components\Routing\Contracts\RouterContract;
+use Delta\Components\Routing\Interfaces\Router as IRouter;
 
 
-final class Router implements RouterContract
+final class Router implements IRouter
 {
     private array $routes = [];
 
-
-    public function addRoute(string $method, string $path, object $callback): void
-    {
+    
+    public function addRoute(
+        string $method,
+        string $path,
+        object $callback,
+    ): void {
         $this->routes[$method][$path] = new Route(
             method: $method,
             path: $path,
-            callback: $callback
+            callback: $callback,
         );
     }
 
@@ -33,9 +36,13 @@ final class Router implements RouterContract
     {
         $validator = new RouterValidator($this->routes);
 
-        if (!$validator->isMethodExists($method)) die(RouteContentCreator::createUnsupportedMethod($method));
+        if (!$validator->isMethodExists($method)) {
+            die(RouteContentCreator::createUnsupportedMethod($method));
+        }
 
-        return !$validator->isPathExists($method, $path) ? RouteContentCreator::createFallback() : $this->getRouteFromRequest($method, $path);
+        return !$validator->isPathExists($method, $path)
+            ? RouteContentCreator::createFallback()
+            : $this->getRouteFromRequest($method, $path);
     }
 
     public function execute(Route $route, array $http): mixed

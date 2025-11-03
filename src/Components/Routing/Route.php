@@ -9,8 +9,7 @@ final class Route
         private string $method,
         private string $path,
         private object $callback,
-    ) {
-    }
+    ) {}
 
     public function __get($name)
     {

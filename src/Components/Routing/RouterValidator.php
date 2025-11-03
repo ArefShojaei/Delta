@@ -2,14 +2,12 @@
 
 namespace Delta\Components\Routing;
 
-use Delta\Components\Routing\Contracts\RouterValidatorContract;
+use Delta\Components\Routing\Interfaces\RouterValidator as IRouterValidator;
 
 
-final class RouterValidator implements RouterValidatorContract
+final class RouterValidator implements IRouterValidator
 {
-    public function __construct(private array $routes)
-    {
-    }
+    public function __construct(private array $routes) {}
 
     public function isMethodExists(string $method): bool
     {

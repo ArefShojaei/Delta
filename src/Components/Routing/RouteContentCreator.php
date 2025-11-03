@@ -3,17 +3,17 @@
 namespace Delta\Components\Routing;
 
 use Delta\Components\Http\Request;
-use Delta\Components\Routing\Contracts\RouteContentCreatorContract;
+use Delta\Components\Routing\Interfaces\RouteContentCreator as IRouteContentCreator;
 
 
-final class RouteContentCreator implements RouteContentCreatorContract
+final class RouteContentCreator implements IRouteContentCreator
 {
     public static function createFallback(): Route
     {
         return new Route(
             method: Request::READABLE,
             path: "/404",
-            callback: fn () => "404 | Not Found"
+            callback: fn() => "404 | Not Found",
         );
     }
 
