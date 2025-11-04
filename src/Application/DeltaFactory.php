@@ -3,17 +3,15 @@
 namespace Delta\Application;
 
 use Delta\Application\Interfaces\DeltaFactory as IDeltaFactory;
-use Delta\Components\Routing\Router;
+use Delta\Components\Container\Container;
 
 
 final class DeltaFactory implements IDeltaFactory
 {
-    public static function createApp(string $appModule): Application
-    {
-        $meta = [
-            "router" => new Router(),
-        ];
-
-        return new Application($appModule, $meta);
+    public static function createApp(
+        string $module,
+        Container $container,
+    ): Application {
+        return new Application($module, $container);
     }
 }
