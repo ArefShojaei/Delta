@@ -25,9 +25,7 @@ final class Request implements IRequest
 
     public function header(string|HttpRequestHeader $key): ?string
     {
-        if ($key instanceof HttpRequestHeader) {
-            $this->headers[$key->value] ?? null;
-        }
+        if ($key instanceof HttpRequestHeader) return $this->headers[$key->value] ?? null;
 
         return $this->headers[$key] ?? null;
     }
