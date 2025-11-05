@@ -4,26 +4,34 @@ namespace Delta\Application;
 
 use Delta\Application\{
     Interfaces\Application as IApplication,
-    Providers\ModuleLayerProvider,
+    Layers\HasLayerProviderRegisteration
 };
-use Delta\Components\Container\Container;
+use Delta\Bootstrap\Bootstrap;
 use Delta\Components\Http\Kernel;
 
 
 final class Application implements IApplication
 {
-    public function __construct(string $module, private Container $container)
+    use HasLayerProviderRegisteration;
+
+    private Bootstrap $bootstrap;
+
+
+    public function __construct(private readonly string $module)
     {
-        $moduleLayer = new ModuleLayerProvider($module);
+        $this->bootstrap = new Bootstrap;
+    }
 
-        $moduleLayer->process();
+    public function boot(): void
+    {
+        $this->bootstrap->init();
 
-        exit();
+        $this->registerLayerProviders();
     }
 
     public function run(): void
     {
-        $kernel = new Kernel($this->container);
+        $kernel = new Kernel($this->bootstrap->getContainer());
 
         $kernel->handle();
     }
