@@ -11,5 +11,7 @@ interface Container
     
     public function resolve(string $abstract): ?object;
     
+    public function getBindings(): array;
+
     public function getInstances(): array;
 }
