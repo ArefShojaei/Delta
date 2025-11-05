@@ -3,6 +3,10 @@
 namespace Delta\Application\Layers\Module;
 
 use Delta\Components\Routing\Attributes\{Controller, Route};
+use Delta\Components\Routing\{
+    Router,
+    RouteMeta
+};
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -33,10 +37,24 @@ trait CanDispatchControllers
 
             $attribute = current($attributes)->newInstance();
 
-            $routes[] = $attribute->path;
+            $routes[$attribute->method][$attribute->path] = new RouteMeta(
+                method: $method,
+                reflection: $reflection
+            );
         }
 
         return $routes;
+    }
+
+    private function registerRoutes(string $prefix, array $routes): void
+    {
+        $router = $this->container->resolve(Router::class);
+
+        foreach ($routes as $method => $meta) {
+            foreach ($meta as $route => $callback) {
+                $router->addRoute($method, $prefix . $route, $callback);
+            }
+        }
     }
 
     private function dispatch(array $controllers)
@@ -44,9 +62,10 @@ trait CanDispatchControllers
         foreach ($controllers as $controller) {
             $controllerReflection = new ReflectionClass($controller);
 
-            $this->getPrefix($controllerReflection);
-
-            $this->getRoutes($controllerReflection);
+            $this->registerRoutes(
+                prefix: $this->getPrefix($controllerReflection),
+                routes: $this->getRoutes($controllerReflection)
+            );
         }
     }
 }

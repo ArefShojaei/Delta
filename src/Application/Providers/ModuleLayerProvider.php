@@ -10,7 +10,7 @@ use Delta\Application\Layers\Module\{
     CanDispatchExports,
     CanGetAttribute,
 };
-
+use Delta\Components\Container\Container;
 
 final class ModuleLayerProvider implements ILayerProvider
 {
@@ -28,7 +28,7 @@ final class ModuleLayerProvider implements ILayerProvider
 
     use CanGetAttribute;
 
-    public function __construct(private readonly string $module) {}
+    public function __construct(private readonly string $module, private Container $container) {}
 
     public function process(): void
     {

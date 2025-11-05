@@ -22,7 +22,7 @@ final class Application implements IApplication
         $this->bootstrap = new Bootstrap;
     }
 
-    public function boot(): void
+    private function boot(): void
     {
         $this->bootstrap->init();
 
@@ -31,6 +31,8 @@ final class Application implements IApplication
 
     public function run(): void
     {
+        $this->boot();
+
         $kernel = new Kernel($this->bootstrap->getContainer());
 
         $kernel->handle();

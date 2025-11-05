@@ -18,11 +18,9 @@ trait HasLayerProviderRegisteration
 
     private function registerModuleLayerProvider(): void
     {
-        $moduleLayer = new ModuleLayerProvider($this->module);
+        $moduleLayer = new ModuleLayerProvider($this->module, $this->bootstrap->getContainer());
 
         $moduleLayer->process();
-
-        exit();
     }
 
     private function registerControllerLayerProvider(): void {}
