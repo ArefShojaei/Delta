@@ -8,6 +8,7 @@ use Delta\Components\Http\{
     Request,
     Response,
 };
+use Delta\Components\Routing\Router;
 
 
 final class HttpFactory implements IHttpFactory
@@ -25,8 +26,8 @@ final class HttpFactory implements IHttpFactory
     public static function createHttp(
         Request $request,
         Response $response,
-        array $meta,
+        Router $router,
     ): Http {
-        return new Http($request, $response, $meta);
+        return new Http($request, $response, $router);
     }
 }

@@ -44,8 +44,6 @@ final class HttpBuilder implements IHttpBuilder
 
     public function build(): Http
     {
-        $meta = ["router" => $this->router];
-
-        return HttpFactory::createHttp($this->request, $this->response, $meta);
+        return HttpFactory::createHttp($this->request, $this->response, $this->router);
     }
 }

@@ -69,9 +69,7 @@ final class Request implements IRequest
     {
         $params = [];
 
-        if (!$this->header(HttpRequestHeader::QUERY)) {
-            return $params;
-        }
+        if (!$this->header(HttpRequestHeader::QUERY)) return $params;
 
         $inputs = explode("&", $this->header(HttpRequestHeader::QUERY));
 

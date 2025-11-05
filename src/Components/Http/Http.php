@@ -10,16 +10,11 @@ use Delta\Components\{
 
 final class Http implements IHttp
 {
-    private Router $router;
-
-    
     public function __construct(
         private Request $request,
         private Response $response,
-        private array $meta,
-    ) {
-        $this->router = $meta["router"];
-    }
+        private Router $router,
+    ) {}
 
     public static function getHeaders(): array
     {
@@ -36,9 +31,7 @@ final class Http implements IHttp
         if ($route->path !== $this->request->route()) {
             http_response_code(404);
 
-            echo $this->router->execute($route, []);
-
-            return;
+            die($this->router->execute($route, []));
         }
 
         echo $this->router->execute($route, [$this->request, $this->response]);
