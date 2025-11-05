@@ -5,6 +5,7 @@ namespace Delta\Components\Http;
 use Delta\Components\Container\Container;
 use Delta\Components\Http\Builders\{HttpBuilder, ResponseBuilder};
 use Delta\Components\Http\Interfaces\Kernel as IKernel;
+use Delta\Components\Routing\Router;
 
 
 final class Kernel implements IKernel
@@ -14,8 +15,8 @@ final class Kernel implements IKernel
     public function handle(): void
     {
         try {
-            $http = new HttpBuilder()
-                ->setRouter($this->container->resolve("router"))
+            $http = (new HttpBuilder)
+                ->setRouter($this->container->resolve(Router::class))
                 ->setRequest(Http::getHeaders())
                 ->setResponse()
                 ->build();
@@ -27,7 +28,7 @@ final class Kernel implements IKernel
                 "message" => $e->getMessage(),
             ];
 
-            $response = new ResponseBuilder()
+            $response = (new ResponseBuilder)
                 ->setStatus(Response::HTTP_INTERNAL_SERVER_ERROR)
                 ->setHeader("Content-type", "application/json")
                 ->setBody($body)
