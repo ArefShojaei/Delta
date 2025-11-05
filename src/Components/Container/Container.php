@@ -2,7 +2,7 @@
 
 namespace Delta\Components\Container;
 
-use Delta\Components\Container\Container as IContainer;
+use Delta\Components\Container\Interfaces\Container as IContainer;
 use Closure;
 
 

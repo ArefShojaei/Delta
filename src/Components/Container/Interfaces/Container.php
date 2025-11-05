@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Components\Container;
+namespace Delta\Components\Container\Interfaces;
 
 use Closure;
 
