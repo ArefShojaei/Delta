@@ -10,14 +10,14 @@ use Delta\Components\{
 };
 
 
-final class Response extends HttpStatus implements IResponse
+class Response extends HttpStatus implements IResponse
 {
-    private array $data = [];
+    private array $data;
 
     
-    public function body(array $body): void
+    public function body(array $data): void
     {
-        $this->data = $body;
+        $this->data = $data;
     }
 
     public function header(string $key, string $value): void
@@ -35,9 +35,25 @@ final class Response extends HttpStatus implements IResponse
         Session::set($key, $value);
     }
 
-    public function status($code): void
+    public function status(int|HttpStatus $code): void
     {
         http_response_code($code);
+    }
+
+    public function json(array $data): void
+    {
+        $this->header("Content-type", "application/json");
+
+        $this->body($data);
+
+        $this->send();
+    }
+
+    public function html(string $content): void
+    {
+        $this->header("Content-type", "text/html");
+        
+        echo $content;
     }
 
     public function send(): void
