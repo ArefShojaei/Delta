@@ -13,7 +13,7 @@ final class RouteContentCreator implements IRouteContentCreator
         return new Route(
             method: Request::READABLE,
             path: "/404",
-            callback: fn() => "404 | Not Found",
+            meta: fn() => "404 | Not Found",
         );
     }
 

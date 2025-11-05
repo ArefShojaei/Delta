@@ -2,15 +2,15 @@
 
 namespace Delta\Components\Routing;
 
-use Closure;
+use ReflectionClass;
+use ReflectionMethod;
 
 
-final class Route
+final class RouteMeta
 {
     public function __construct(
-        private string $method,
-        private string $path,
-        private RouteMeta|Closure $meta,
+        private ReflectionMethod $method,
+        private ReflectionClass $reflection,
     ) {}
 
     public function __get($name)

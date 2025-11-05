@@ -2,6 +2,7 @@
 
 namespace Delta\Components\Routing;
 
+use Closure;
 use Delta\Components\Routing\Interfaces\Router as IRouter;
 
 
@@ -13,12 +14,12 @@ final class Router implements IRouter
     public function addRoute(
         string $method,
         string $path,
-        object $callback,
+        RouteMeta|Closure $meta,
     ): void {
         $this->routes[$method][$path] = new Route(
             method: $method,
             path: $path,
-            callback: $callback,
+            meta: $meta,
         );
     }
 
@@ -36,9 +37,7 @@ final class Router implements IRouter
     {
         $validator = new RouterValidator($this->routes);
 
-        if (!$validator->isMethodExists($method)) {
-            die(RouteContentCreator::createUnsupportedMethod($method));
-        }
+        if (!$validator->isMethodExists($method)) die(RouteContentCreator::createUnsupportedMethod($method));
 
         return !$validator->isPathExists($method, $path)
             ? RouteContentCreator::createFallback()
@@ -47,6 +46,10 @@ final class Router implements IRouter
 
     public function execute(Route $route, array $http): mixed
     {
-        return call_user_func($route->callback, $http);
+        if ($route->meta instanceof Closure) return call_user_func($route->meta, $http);
+
+        $meta = $route->meta;
+
+        return $meta->method->invokeArgs($meta->reflection->newInstance(), $http);
     }
 }
