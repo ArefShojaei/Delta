@@ -9,10 +9,10 @@ use Closure;
 final class Container implements IContainer
 {
     private array $bindings = [];
-    
+
     private array $instances = [];
 
-    
+
     public function bind(string $abstract, string|Closure $concrete): void
     {
         $this->bindings[$abstract] = $concrete;
@@ -26,7 +26,7 @@ final class Container implements IContainer
 
         if ($concrete instanceof Closure) return $concrete($this);
 
-        if (isset($this->instances[$abstract])) return $this->instances[$abstract]; 
+        if (isset($this->instances[$abstract])) return $this->instances[$abstract];
 
         $this->instances[$abstract] = new $concrete;
 
