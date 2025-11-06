@@ -20,10 +20,10 @@ final class Bootstrap implements IBootstrap
 
     private function registerServiceProviders(): void
     {
-        $serviceFiles = glob(dirname(__DIR__) . "\\services\\*.php");
+        $serviceFiles = glob(dirname(__DIR__) . "/Services/*.php");
 
         foreach ($serviceFiles as $serviceFile) {
-            $pathParts = explode("\\", $serviceFile);
+            $pathParts = explode("/", $serviceFile);
 
             $file = end($pathParts);
 
@@ -34,7 +34,7 @@ final class Bootstrap implements IBootstrap
             $instance = new $service;
 
             $instance->register($this->getContainer());
-            
+
             $instance->boot($this->getContainer());
         }
     }
