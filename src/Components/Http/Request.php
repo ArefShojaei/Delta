@@ -94,6 +94,6 @@ final class Request implements IRequest
 
     public function host(): string
     {
-        return (int) $this->header(HttpRequestHeader::HOST);
+        return $this->header(HttpRequestHeader::HOST);
     }
 }
