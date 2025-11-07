@@ -3,9 +3,10 @@
 namespace Delta\Components\Routing;
 
 use Closure;
+use Delta\Common\Interfaces\PropertyGetter as IPropertyGetter;
 
 
-final class Route
+final class Route implements IPropertyGetter
 {
     public function __construct(
         private string $method,
@@ -13,8 +14,8 @@ final class Route
         private RouteMeta|Closure $meta,
     ) {}
 
-    public function __get($name)
+    public function __get($prop): mixed
     {
-        return $this->{$name};
+        return $this->{$prop};
     }
 }
