@@ -20,7 +20,7 @@ final class Request implements IRequest
 
     public const DELETABLE = "DELETE";
 
-    
+
     public function __construct(private array $headers) {}
 
     public function header(string|HttpRequestHeader $key): ?string
@@ -67,19 +67,7 @@ final class Request implements IRequest
 
     public function query(): array
     {
-        $params = [];
-
-        if (!$this->header(HttpRequestHeader::QUERY)) return $params;
-
-        $inputs = explode("&", $this->header(HttpRequestHeader::QUERY));
-
-        foreach ($inputs as $input) {
-            [$key, $value] = explode("=", $input);
-
-            $params[$key] = $value;
-        }
-
-        return $params;
+        return $_GET;
     }
 
     public function agent(): string
