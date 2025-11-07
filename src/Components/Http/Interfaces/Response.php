@@ -5,7 +5,20 @@ namespace Delta\Components\Http\Interfaces;
 use Delta\Components\Http\HttpStatus;
 
 
-interface Response
+interface JsonResponse
+{
+    public function json(array $data): void;
+}
+
+interface HtmlResponse
+{
+    public function html(string $content): void;
+}
+
+interface OutputResponse extends JsonResponse, HtmlResponse {}
+
+
+interface Response extends OutputResponse
 {
     public function body(array $data): void;
 
@@ -16,10 +29,6 @@ interface Response
     public function session(string $key, string $value): void;
 
     public function status(int|HttpStatus $code): void;
-    
-    public function json(array $data): void;
-    
-    public function html(string $content): void;
 
     public function send(): void;
 }
