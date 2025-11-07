@@ -65,9 +65,11 @@ final class Request implements IRequest
         return $this->header(HttpRequestHeader::DOMAIN);
     }
 
-    public function query(): array
+    public function query(?string $key = null): null|string|array
     {
-        return $_GET;
+        if (is_null($key)) return $_GET;
+
+        return $_GET[$key] ?? null;
     }
 
     public function agent(): string
@@ -83,5 +85,14 @@ final class Request implements IRequest
     public function host(): string
     {
         return $this->header(HttpRequestHeader::HOST);
+    }
+
+    public function body(?string $key = null): null|string|array
+    {
+        $data = json_decode(file_get_contents("php://input"), true) ?? [];
+
+        if (is_null($key)) return $data;
+
+        return $data[$key] ?? null;
     }
 }
