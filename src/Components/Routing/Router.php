@@ -2,7 +2,15 @@
 
 namespace Delta\Components\Routing;
 
-use Delta\Components\Routing\Interfaces\Router as IRouter;
+use Delta\Components\Http\{
+    Request,
+    Exceptions\InvalidHttpRequestMethod
+};
+use Delta\Components\Routing\{
+    Attributes\NotFound,
+    Exceptions\RouteNotFound,
+    Interfaces\Router as IRouter
+};
 
 
 final class Router implements IRouter
@@ -33,9 +41,7 @@ final class Router implements IRouter
 
         $validator = new RouterValidator($this->routes);
 
-        if (!$validator->isMethodExists($method)) {
-            // TODO: Implement "Method not allowed" feature
-        }
+        if (!$validator->isMethodExists($method)) throw new InvalidHttpRequestMethod($method);
 
         foreach ($routes[$method] as $pattern => $route) {
             [$isMatched, $matches] = $this->matchRoute($pattern, $uri);
@@ -43,9 +49,7 @@ final class Router implements IRouter
             if ($isMatched) break;
         }
 
-        if (!$isMatched) {
-            // TODO: Implement "Route not found" feature
-        }
+        if (!$isMatched) return $this->getRouteFromRequest(Request::READABLE, NotFound::PATH);
 
         $params = $this->getRouteParmas($matches);
 
@@ -71,7 +75,7 @@ final class Router implements IRouter
 
     private function getRouteFromRequest(string $method, string $path): Route
     {
-        return $this->routes[$method][$path];
+        return $this->routes[$method][$path] ?? throw new RouteNotFound;
     }
 
     /**

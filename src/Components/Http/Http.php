@@ -2,10 +2,13 @@
 
 namespace Delta\Components\Http;
 
-use Delta\Components\{
-    Http\Interfaces\Http as IHttp,
-    Routing\Router
+use Exception;
+use Delta\Components\Http\Interfaces\Http as IHttp;
+use Delta\Components\Http\Exceptions\{
+    InvalidHttpRequestMethod,
+    InternalServerError,
 };
+use Delta\Components\Routing\{Exceptions\RouteNotFound, Router};
 
 
 final class Http implements IHttp
@@ -23,11 +26,33 @@ final class Http implements IHttp
 
     public function listen(): void
     {
-        $route = $this->router->findRoute(
-            $this->request->method(),
-            $this->request->route(),
-        );
+        try {
+            $route = $this->router->findRoute(
+                $this->request->method(),
+                $this->request->route(),
+            );
 
-        $this->router->dispatch($route, [$this->request, $this->response]);
+            $this->router->dispatch($route, [$this->request, $this->response]);
+        } catch (InvalidHttpRequestMethod $error) {
+            $this->sendFailedResponseError($error);
+        } catch (RouteNotFound $error) {
+            $this->sendFailedResponseError($error);
+        } catch (InternalServerError $error) {
+            $this->sendFailedResponseError($error);
+        } catch (InternalServerError $error) {
+            $this->sendFailedResponseError($error);
+        }
+    }
+
+    private function sendFailedResponseError(Exception $error): void
+    {
+        $this->response->status($error->getCode());
+
+        $this->response->json([
+            "code" => $error->getCode(),
+            "message" => $error->getMessage(),
+        ]);
+
+        exit;
     }
 }
