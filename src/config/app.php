@@ -2,6 +2,11 @@
 
 return [
     /**
+     * Application name
+     */
+    "name" => \Delta\Components\Env\DotEnvEnvironment::get("name", "Delta - PHP Framework"),
+
+    /**
      * Application service providers as dependencies before bootstrapping the server
      */
     "providers" => [
