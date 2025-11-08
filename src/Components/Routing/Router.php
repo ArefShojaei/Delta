@@ -2,10 +2,7 @@
 
 namespace Delta\Components\Routing;
 
-use Closure;
-use Delta\Components\Http\Request;
 use Delta\Components\Routing\Interfaces\Router as IRouter;
-use Delta\Components\Routing\Attributes\{ MethodNotAllowed, NotFound };
 
 
 final class Router implements IRouter
@@ -16,7 +13,7 @@ final class Router implements IRouter
     public function addRoute(
         string $method,
         string $path,
-        RouteMeta|Closure $meta,
+        RouteMeta $meta,
     ): void {
         $this->routes[$method][$path] = new Route(
             method: $method,
@@ -34,11 +31,11 @@ final class Router implements IRouter
     {
         $routes = $this->getRoutes();
 
-
         $validator = new RouterValidator($this->routes);
 
-        if (!$validator->isMethodExists($method)) return $this->getRouteFromRequest(Request::READABLE, MethodNotAllowed::PATH);
-
+        if (!$validator->isMethodExists($method)) {
+            // TODO: Implement "Method not allowed" feature
+        }
 
         foreach ($routes[$method] as $pattern => $route) {
             [$isMatched, $matches] = $this->matchRoute($pattern, $uri);
@@ -46,13 +43,13 @@ final class Router implements IRouter
             if ($isMatched) break;
         }
 
-        if (!$isMatched) return $this->getRouteFromRequest(Request::READABLE, NotFound::PATH);
-
+        if (!$isMatched) {
+            // TODO: Implement "Route not found" feature
+        }
 
         $params = $this->getRouteParmas($matches);
 
         if ($params) $this->setRouteParams($params);
-
 
         return $route;
     }
@@ -66,8 +63,10 @@ final class Router implements IRouter
 
         $currentClassMethodReflection = $route->meta->method;
 
-
-        $currentClassMethodReflection->invokeArgs($currentClassReflection->newInstance(), $http);
+        $currentClassMethodReflection->invokeArgs(
+            $currentClassReflection->newInstance(),
+            $http,
+        );
     }
 
     private function getRouteFromRequest(string $method, string $path): Route
@@ -91,7 +90,11 @@ final class Router implements IRouter
 
     private function getRouteParmas(array $routeMatches): array
     {
-        return array_filter($routeMatches, fn($key) => is_string($key), ARRAY_FILTER_USE_KEY);
+        return array_filter(
+            $routeMatches,
+            fn($key) => is_string($key),
+            ARRAY_FILTER_USE_KEY,
+        );
     }
 
     private function setRouteParams(array $params): void
