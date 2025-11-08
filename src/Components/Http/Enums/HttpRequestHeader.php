@@ -7,7 +7,7 @@ enum HttpRequestHeader: string
 {
     case METHOD = "REQUEST_METHOD";
 
-    case PATH = "REQUEST_URI";
+    case URI = "REQUEST_URI";
 
     case ROUTE = "PHP_SELF";
 
