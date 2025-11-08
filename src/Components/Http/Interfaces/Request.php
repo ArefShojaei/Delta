@@ -20,11 +20,13 @@ interface RequestHeader
     public function time(): int;
 
     public function body(?string $key = null): null|string|array;
+
+    public function params(?string $key = null): null|string|array;
 }
 
 interface RequestUrl
 {
-    public function path(): string;
+    public function uri(): string;
 
     public function route(): string;
 

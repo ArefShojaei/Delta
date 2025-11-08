@@ -40,9 +40,9 @@ final class Request implements IRequest
         return $this->header(HttpRequestHeader::METHOD);
     }
 
-    public function path(): string
+    public function uri(): string
     {
-        return $this->header(HttpRequestHeader::PATH);
+        return $this->header(HttpRequestHeader::URI);
     }
 
     public function route(): string
@@ -94,5 +94,14 @@ final class Request implements IRequest
         if (is_null($key)) return $data;
 
         return $data[$key] ?? null;
+    }
+
+    public function params(?string $key = null): null|string|array
+    {
+        global $_PARAMS;
+
+        if (is_null($key)) return $_PARAMS ?? [];
+
+        return $_PARAMS[$key] ?? null;
     }
 }
