@@ -7,7 +7,6 @@ use Delta\Components\Http\{
     Response,
     Request,
     Http,
-    Factory\HttpFactory,
     Interfaces\HttpBuilder as IHttpBuilder,
 };
 
@@ -21,16 +20,16 @@ final class HttpBuilder implements IHttpBuilder
     private Router $router;
 
     
-    public function setRequest(array $headers): self
+    public function setRequest(Request $request): self
     {
-        $this->request = HttpFactory::createRequest($headers);
+        $this->request = $request;
 
         return $this;
     }
 
-    public function setResponse(): self
+    public function setResponse(Response $response): self
     {
-        $this->response = HttpFactory::createResponse();
+        $this->response = $response;
 
         return $this;
     }
@@ -44,6 +43,6 @@ final class HttpBuilder implements IHttpBuilder
 
     public function build(): Http
     {
-        return HttpFactory::createHttp($this->request, $this->response, $this->router);
+        return new Http($this->request, $this->response, $this->router);
     }
 }

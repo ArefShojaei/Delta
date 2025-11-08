@@ -19,11 +19,6 @@ final class Http implements IHttp
         private Router $router,
     ) {}
 
-    public static function getHeaders(): array
-    {
-        return $_SERVER;
-    }
-
     public function listen(): void
     {
         try {

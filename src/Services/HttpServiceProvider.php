@@ -6,7 +6,7 @@ use Delta\Bootstrap\Interfaces\ServiceProvider as IServiceProvider;
 use Delta\Components\Container\Container;
 use Delta\Components\Env\DotEnvEnvironment as Env;
 use Delta\Components\Http\{Http, Request, Response};
-use Delta\Components\Http\Builders\HttpBuilder;
+use Delta\Components\Http\Factory\HttpFactory;
 use Delta\Components\Routing\Router;
 
 
@@ -14,16 +14,16 @@ final class HttpServiceProvider implements IServiceProvider
 {
     public function register(Container $container): void
     {
-        $container->bind(Request::class, fn() => new Request($_SERVER));
+        $container->bind(Request::class, fn() => HttpFactory::createRequest($_SERVER));
 
-        $container->bind(Response::class, Response::class);
+        $container->bind(Response::class, fn() => HttpFactory::createResponse());
 
         $container->bind(Http::class, function(Container $container) {
-            return (new HttpBuilder)
-                ->setRouter($container->resolve(Router::class))
-                ->setRequest($container->resolve(Request::class))
-                ->setResponse($container->resolve(Response::class))
-                ->build();
+            return HttpFactory::createHttp(
+                router: $container->resolve(Router::class),
+                request: $container->resolve(Request::class),
+                response: $container->resolve(Response::class),
+            );
         });
     }
 

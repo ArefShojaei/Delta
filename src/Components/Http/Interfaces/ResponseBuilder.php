@@ -2,7 +2,7 @@
 
 namespace Delta\Components\Http\Interfaces;
 
-use Delta\Components\Http\Response;
+use Delta\Components\Http\{HttpStatus, Response};
 
 
 interface ResponseBuilder
@@ -11,7 +11,7 @@ interface ResponseBuilder
 
     public function setHeaders(array $headers): self;
 
-    public function setStatus(Response|int $code): self;
+    public function setStatus(HttpStatus|Response|int $code): self;
 
     public function setCookie(string $key, string $value): self;
 

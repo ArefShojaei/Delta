@@ -56,6 +56,9 @@ class Response extends HttpStatus implements IResponse
         echo $content;
     }
 
+    /**
+     * Send JSON data
+     */
     public function send(): void
     {
         echo Json::encode($this->data);
