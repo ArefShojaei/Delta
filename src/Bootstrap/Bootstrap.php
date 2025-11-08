@@ -4,6 +4,7 @@ namespace Delta\Bootstrap;
 
 use Delta\Bootstrap\Interfaces\Bootstrap as IBootstrap;
 use Delta\Components\Container\Container;
+use Delta\Components\Env\DotEnvEnvironment;
 
 
 final class Bootstrap implements IBootstrap
@@ -13,6 +14,8 @@ final class Bootstrap implements IBootstrap
 
     public function init(): void
     {
+        (new DotEnvEnvironment)->load(dirname(__DIR__, 2));
+
         $this->buildContainer();
 
         $this->registerServiceProviders();
@@ -20,17 +23,11 @@ final class Bootstrap implements IBootstrap
 
     private function registerServiceProviders(): void
     {
-        $serviceFiles = glob(dirname(__DIR__) . "/Services/*.php");
+        $app = require_once dirname(__DIR__) . "/config/app.php";
 
-        foreach ($serviceFiles as $serviceFile) {
-            $pathParts = explode("/", $serviceFile);
+        $services = $app["providers"];
 
-            $file = end($pathParts);
-
-            $name = trim(str_replace(".php", "", $file));
-
-            $service = "Delta\\Services\\" . ucfirst($name);
-
+        foreach ($services as $service) {
             $instance = new $service;
 
             $instance->register($this->getContainer());
