@@ -52,7 +52,7 @@ trait CanDispatchControllers
 
         foreach ($routes as $method => $meta) {
             foreach ($meta as $route => $callback) {
-                $router->addRoute($method, $prefix . $route, $callback);
+                $router->addRoute($method, $prefix . ltrim($route, "/"), $callback);
             }
         }
     }
