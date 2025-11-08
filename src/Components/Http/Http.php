@@ -28,12 +28,6 @@ final class Http implements IHttp
             $this->request->route(),
         );
 
-        if ($route->path !== $this->request->route()) {
-            http_response_code(404);
-
-            die($this->router->execute($route, []));
-        }
-
-        echo $this->router->execute($route, [$this->request, $this->response]);
+        $this->router->dispatch($route, [$this->request, $this->response]);
     }
 }
