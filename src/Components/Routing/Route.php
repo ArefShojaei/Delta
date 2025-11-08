@@ -11,7 +11,7 @@ final class Route implements IPropertyGetter
     public function __construct(
         private string $method,
         private string $path,
-        private RouteMeta|Closure $meta,
+        private RouteMeta $meta,
     ) {}
 
     public function __get($prop): mixed

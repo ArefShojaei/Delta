@@ -2,9 +2,7 @@
 
 namespace Delta\Components\Routing\Interfaces;
 
-use Closure;
-use Delta\Components\Routing\Route;
-use Delta\Components\Routing\RouteMeta;
+use Delta\Components\Routing\{ Route, RouteMeta };
 
 
 interface Router
@@ -12,12 +10,12 @@ interface Router
     public function addRoute(
         string $method,
         string $path,
-        RouteMeta|Closure $meta,
+        RouteMeta $meta,
     ): void;
 
-    public function getRoutes(): array;
+    public function getRoutes(?string $method = null): array;
 
     public function findRoute(string $method, string $path): Route;
 
-    public function execute(Route $route, array $http): mixed;
+    public function dispatch(Route $route, array $http): void;
 }
