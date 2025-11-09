@@ -2,7 +2,6 @@
 
 namespace Delta\Components\Log;
 
-use Delta\Application\Attributes\Log;
 use Delta\Common\Interfaces\Singleton as ISingleton;
 use Delta\Components\Log\{
     Abilities\CanLogMessage,
