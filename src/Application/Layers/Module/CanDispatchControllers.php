@@ -2,7 +2,7 @@
 
 namespace Delta\Application\Layers\Module;
 
-use Delta\Components\Routing\Attributes\{Controller, Route};
+use Delta\Components\Routing\Attributes\{Controller, Middleware, Route};
 use Delta\Components\Routing\{
     Router,
     RouteMeta
@@ -23,13 +23,26 @@ trait CanDispatchControllers
         return $attribute->prefix;
     }
 
+    private function getMiddlewares(ReflectionClass|ReflectionMethod $reflection): array
+    {
+        $attributes = $reflection->getAttributes(Middleware::class);
+
+        $attribute = current($attributes)->newInstance();
+
+        return $attribute->middlewares;
+    }
+
     private function getRoutes(ReflectionClass $reflection): array
     {
-        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
-
         $routes = [];
 
+        $classMiddlewares = $this->getMiddlewares($reflection);
+
+        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+
         foreach ($methods as $method) {
+            $methodMiddlewares = $this->getMiddlewares($method);
+
             $attributes = $method->getAttributes(
                 Route::class,
                 ReflectionAttribute::IS_INSTANCEOF,
@@ -37,10 +50,14 @@ trait CanDispatchControllers
 
             $attribute = current($attributes)->newInstance();
 
-            $routes[$attribute->method][$attribute->path] = new RouteMeta(
+            $routes[$attribute->method][$attribute->path]["meta"] = new RouteMeta(
                 method: $method,
                 reflection: $reflection
             );
+
+            $middlewares = array_merge($classMiddlewares, $methodMiddlewares);
+
+            $routes[$attribute->method][$attribute->path]["middlewares"] = $middlewares;
         }
 
         return $routes;
@@ -51,8 +68,13 @@ trait CanDispatchControllers
         $router = $this->container->resolve(Router::class);
 
         foreach ($routes as $method => $meta) {
-            foreach ($meta as $route => $callback) {
-                $router->addRoute($method, $prefix . ltrim($route, "/"), $callback);
+            foreach ($meta as $route => $data) {
+                $router->addRoute(
+                    method: $method,
+                    path: $prefix . ltrim($route, "/"),
+                    meta: $data["meta"],
+                    middlewares: $data["middlewares"],
+                );
             }
         }
     }

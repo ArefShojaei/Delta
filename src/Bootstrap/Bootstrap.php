@@ -4,7 +4,6 @@ namespace Delta\Bootstrap;
 
 use Delta\Bootstrap\Interfaces\Bootstrap as IBootstrap;
 use Delta\Components\Container\Container;
-use Delta\Components\Env\DotEnvEnvironment;
 
 
 final class Bootstrap implements IBootstrap
@@ -14,8 +13,6 @@ final class Bootstrap implements IBootstrap
 
     public function init(): void
     {
-        (new DotEnvEnvironment)->load(dirname(__DIR__, 2));
-
         $this->buildContainer();
 
         $this->registerServiceProviders();

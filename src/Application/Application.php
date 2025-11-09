@@ -7,6 +7,7 @@ use Delta\Application\{
     Layers\HasLayerProviderRegisteration
 };
 use Delta\Bootstrap\Bootstrap;
+use Delta\Components\Env\DotEnvEnvironment;
 use Delta\Components\Http\Kernel;
 
 
@@ -20,6 +21,13 @@ final class Application implements IApplication
     public function __construct(private readonly string $module)
     {
         $this->bootstrap = new Bootstrap;
+    }
+
+    public function configure(array $config): self
+    {
+        (new DotEnvEnvironment)->load($config["env_path"]);
+
+        return $this;
     }
 
     private function boot(): void
