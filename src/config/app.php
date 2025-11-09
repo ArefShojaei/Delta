@@ -13,4 +13,11 @@ return [
         Delta\Services\RouterServiceProvider::class,
         Delta\Services\HttpServiceProvider::class,
     ],
+
+    /**
+     * Global Middlewares
+     */
+    "middlewares" => [
+        Delta\Middlewares\CORS::class
+    ]
 ];
