@@ -28,8 +28,10 @@ final class HttpServiceProvider implements IServiceProvider
     }
 
     public function boot(Container $container): void {
-        $response = $container->resolve(Response::class);
+        $http = $container->resolve(Http::class);
 
-        $response->header("X-Powered-By", Env::get("APP_NAME", "Delta - PHP Framework"));
+        $config = require dirname(__DIR__).'/config/app.php';
+
+        $http->applyMiddlewares($config["middlewares"]);
     }
 }
