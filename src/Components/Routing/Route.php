@@ -2,7 +2,6 @@
 
 namespace Delta\Components\Routing;
 
-use Closure;
 use Delta\Common\Interfaces\PropertyGetter as IPropertyGetter;
 
 
@@ -12,6 +11,7 @@ final class Route implements IPropertyGetter
         private string $method,
         private string $path,
         private RouteMeta $meta,
+        private array $middlewares,
     ) {}
 
     public function __get($prop): mixed

@@ -22,11 +22,13 @@ final class Router implements IRouter
         string $method,
         string $path,
         RouteMeta $meta,
+        array $middlewares = []
     ): void {
         $this->routes[$method][$path] = new Route(
             method: $method,
             path: $path,
             meta: $meta,
+            middlewares: $middlewares
         );
     }
 

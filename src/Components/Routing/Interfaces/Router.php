@@ -11,6 +11,7 @@ interface Router
         string $method,
         string $path,
         RouteMeta $meta,
+        array $middlewares = [],
     ): void;
 
     public function getRoutes(?string $method = null): array;
