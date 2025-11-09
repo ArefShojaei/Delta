@@ -27,6 +27,8 @@ final class Http implements IHttp
                 $this->request->route(),
             );
 
+            $this->applyMiddlewares($route->middlewares);
+
             $this->router->dispatch($route, [$this->request, $this->response]);
         } catch (InvalidHttpRequestMethod $error) {
             $this->sendFailedResponseError($error);
@@ -37,6 +39,21 @@ final class Http implements IHttp
         } catch (InternalServerError $error) {
             $this->sendFailedResponseError($error);
         }
+    }
+
+    public function applyMiddlewares(array $middlewares): void
+    {
+        $next = fn() => true;
+
+        foreach ($middlewares as $middleware) {
+            $isOpenedNext = (new $middleware)->handle($this->request, $this->response, $next);
+
+            if (is_null($isOpenedNext)) throw new InternalServerError();
+
+            if (!$isOpenedNext) break;
+        }
+
+        if (!$isOpenedNext) exit;
     }
 
     private function sendFailedResponseError(Exception $error): void
