@@ -5,7 +5,8 @@
     "autoload": {
         "psr-4": {
             "Delta\\": "src/"
-        }
+        },
+        "files": ["src/helpers/*"]
     },
     "authors": [
         {
