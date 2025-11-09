@@ -14,7 +14,7 @@ class Response extends HttpStatus implements IResponse
 {
     private array $data;
 
-    
+
     public function body(array $data): void
     {
         $this->data = $data;
@@ -23,6 +23,11 @@ class Response extends HttpStatus implements IResponse
     public function header(string $key, string $value): void
     {
         header("{$key}: {$value}");
+    }
+
+    public function redirect(string $route): void
+    {
+        $this->header("Location", $route);
     }
 
     public function cookie(string $key, string $value): void
@@ -52,7 +57,7 @@ class Response extends HttpStatus implements IResponse
     public function html(string $content): void
     {
         $this->header("Content-type", "text/html");
-        
+
         echo $content;
     }
 

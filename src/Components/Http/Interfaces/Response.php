@@ -24,6 +24,8 @@ interface Response extends OutputResponse
 
     public function header(string $key, string $value): void;
 
+    public function redirect(string $route): void;
+
     public function cookie(string $key, string $value): void;
 
     public function session(string $key, string $value): void;
