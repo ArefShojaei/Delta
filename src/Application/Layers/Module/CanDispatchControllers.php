@@ -27,6 +27,8 @@ trait CanDispatchControllers
     {
         $attributes = $reflection->getAttributes(Middleware::class);
 
+        if (empty($attributes)) return [];
+
         $attribute = current($attributes)->newInstance();
 
         return $attribute->middlewares;

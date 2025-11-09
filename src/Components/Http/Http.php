@@ -36,13 +36,13 @@ final class Http implements IHttp
             $this->sendFailedResponseError($error);
         } catch (InternalServerError $error) {
             $this->sendFailedResponseError($error);
-        } catch (InternalServerError $error) {
-            $this->sendFailedResponseError($error);
         }
     }
 
     public function applyMiddlewares(array $middlewares): void
     {
+        if (empty($middlewares)) return;
+
         $next = fn() => true;
 
         foreach ($middlewares as $middleware) {
