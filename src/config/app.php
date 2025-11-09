@@ -18,6 +18,7 @@ return [
      * Global Middlewares
      */
     "middlewares" => [
-        Delta\Middlewares\CORS::class
+        Delta\Middlewares\CORS::class,
+        Delta\Middlewares\SecureHttpHeader::class,
     ]
 ];
