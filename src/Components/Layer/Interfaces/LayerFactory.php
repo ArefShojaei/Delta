@@ -2,12 +2,14 @@
 
 namespace Delta\Components\Layer\Interfaces;
 
+use Delta\Components\Container\Container;
+
 
 interface LayerFactory
 {
-    public static function createModuleLayer(string $class): LayerProvider;
-    
-    public static function createControllerLayer(string $class): LayerProvider;
-    
-    public static function createServiceLayer(string $class): LayerProvider;
+    public static function createModuleLayer(string $class, Container $container): LayerProvider;
+
+    public static function createControllerLayer(string $class, Container $container): LayerProvider;
+
+    public static function createProviderLayer(string $class, Container $container): LayerProvider;
 }
