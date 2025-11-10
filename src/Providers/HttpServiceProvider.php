@@ -1,10 +1,9 @@
 <?php
 
-namespace Delta\Services;
+namespace Delta\Providers;
 
 use Delta\Bootstrap\Interfaces\ServiceProvider as IServiceProvider;
 use Delta\Components\Container\Container;
-use Delta\Components\Env\DotEnvEnvironment as Env;
 use Delta\Components\Http\{Http, Request, Response};
 use Delta\Components\Http\Factory\HttpFactory;
 use Delta\Components\Routing\Router;

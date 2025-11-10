@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Services;
+namespace Delta\Providers;
 
 use Delta\Bootstrap\Interfaces\ServiceProvider as IServiceProvider;
 use Delta\Components\{
