@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Application\Attributes;
+namespace Delta\Components\Layer\Attributes;
 
 use Attribute;
 
