@@ -2,14 +2,7 @@
 
 namespace Delta\Application\Layers\Module\Abilities;
 
-use Delta\Components\Routing\Attributes\{Controller, Middleware, Route};
-use Delta\Components\Routing\{
-    Router,
-    RouteMeta
-};
-use ReflectionAttribute;
-use ReflectionClass;
-use ReflectionMethod;
+use Delta\Components\Layer\LayerFactory;
 
 
 trait CanDispatchControllers
@@ -17,79 +10,9 @@ trait CanDispatchControllers
     protected function dispatch(array $controllers)
     {
         foreach ($controllers as $controller) {
-            $controllerReflection = new ReflectionClass($controller);
+            $controllerLayer = LayerFactory::createControllerLayer($controller, $this->container);
 
-            $this->registerRoutes(
-                prefix: $this->getPrefix($controllerReflection),
-                routes: $this->getRoutes($controllerReflection)
-            );
-        }
-    }
-
-    private function getPrefix(ReflectionClass $reflection): ?string
-    {
-        $attributes = $reflection->getAttributes(Controller::class);
-
-        $attribute = current($attributes)->newInstance();
-
-        return $attribute->prefix;
-    }
-
-    private function getMiddlewares(ReflectionClass|ReflectionMethod $reflection): array
-    {
-        $attributes = $reflection->getAttributes(Middleware::class);
-
-        if (empty($attributes)) return [];
-
-        $attribute = current($attributes)->newInstance();
-
-        return $attribute->middlewares;
-    }
-
-    private function getRoutes(ReflectionClass $reflection): array
-    {
-        $routes = [];
-
-        $classMiddlewares = $this->getMiddlewares($reflection);
-
-        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
-
-        foreach ($methods as $method) {
-            $methodMiddlewares = $this->getMiddlewares($method);
-
-            $attributes = $method->getAttributes(
-                Route::class,
-                ReflectionAttribute::IS_INSTANCEOF,
-            );
-
-            $attribute = current($attributes)->newInstance();
-
-            $routes[$attribute->method][$attribute->path]["meta"] = new RouteMeta(
-                method: $method,
-                reflection: $reflection
-            );
-
-            $middlewares = array_merge($classMiddlewares, $methodMiddlewares);
-
-            $routes[$attribute->method][$attribute->path]["middlewares"] = $middlewares;
-        }
-
-        return $routes;
-    }
-
-    private function registerRoutes(string $prefix, array $routes): void
-    {
-        $router = $this->container->resolve(Router::class);
-
-        foreach ($routes as $method => $meta) {
-            foreach ($meta as $route => $data) {
-                $router->addRoute(
-                    method: $method,
-                    path: $prefix . ltrim($route, "/"),
-                    meta: $data["meta"],
-                    middlewares: $data["middlewares"],
-                );
-            }
+            $controllerLayer->process();
         }
     }
 }
