@@ -2,28 +2,35 @@
 
 namespace Delta\Application\Layers;
 
-use Delta\Application\Providers\ModuleLayerProvider;
+use Delta\Application\Layers\{
+    Module\ModuleLayer,
+    Controller\ControllerLayer,
+    Provider\ProviderLayer
+};
+use Delta\Components\Layer\LayerFactory;
 
 
-trait HasLayerProviderRegisteration
+trait LayerRegisteration
 {
-    private function registerLayerProviders(): void
+    protected function registerLayers(): void
     {
-        $this->registerModuleLayerProvider();
-
-        $this->registerControllerLayerProvider();
-
-        $this->registerServiceLayerProvider();
+        $this->registerModuleLayer();
     }
 
-    private function registerModuleLayerProvider(): void
+    private function registerModuleLayer(): void
     {
-        $moduleLayer = new ModuleLayerProvider($this->module, $this->bootstrap->getContainer());
+        $moduleLayer = LayerFactory::createModuleLayer($this->module, $this->bootstrap->getContainer());
 
         $moduleLayer->process();
     }
 
-    private function registerControllerLayerProvider(): void {}
+    private function registerControllerLayer(): void
+    {
+        // TODO: Implement Controller layer registration
+    }
 
-    private function registerServiceLayerProvider(): void {}
+    private function registerProviderLayer(): void
+    {
+        // TODO: Implement Provider layer registration
+    }
 }

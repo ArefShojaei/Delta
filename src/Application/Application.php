@@ -4,7 +4,7 @@ namespace Delta\Application;
 
 use Delta\Application\{
     Interfaces\Application as IApplication,
-    Layers\HasLayerProviderRegisteration
+    Layers\LayerRegisteration
 };
 use Delta\Bootstrap\Bootstrap;
 use Delta\Components\Env\DotEnvEnvironment;
@@ -13,7 +13,7 @@ use Delta\Components\Http\Kernel;
 
 final class Application implements IApplication
 {
-    use HasLayerProviderRegisteration;
+    use LayerRegisteration;
 
     private Bootstrap $bootstrap;
 
@@ -34,7 +34,7 @@ final class Application implements IApplication
     {
         $this->bootstrap->init();
 
-        $this->registerLayerProviders();
+        $this->registerLayers();
     }
 
     public function run(): void
