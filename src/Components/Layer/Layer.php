@@ -12,9 +12,9 @@ use Delta\Components\Layer\Enums\LayerType;
 
 final class Layer implements ILayer
 {
-    private const NAMESPACE = "Delta\\Application\\Layers\\";
+    private const PROVIDERS_NAMESPACE = "Delta\\Application\\Layers\\";
 
-    private const PROVIDER_NAME = "Layer";
+    private const PROVIDER_SUFFIX_NAME = "Layer";
 
     private ILayerProvider $layerProvider;
 
@@ -23,9 +23,9 @@ final class Layer implements ILayer
     {
         $type = ucfirst($type->value);
 
-        $layerProvider = "{$type}" . self::PROVIDER_NAME;
+        $layerProvider = "{$type}" . self::PROVIDER_SUFFIX_NAME;
 
-        $namespace = self::NAMESPACE . $type . "\\" . $layerProvider;
+        $namespace = self::PROVIDERS_NAMESPACE . $type . "\\" . $layerProvider;
 
         $instance = new $namespace($class, $container);
 

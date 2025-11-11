@@ -12,18 +12,18 @@ use Delta\Components\Layer\Enums\LayerType;
 
 final class LayerFactory implements ILayerFactory
 {
-    public static function createModuleLayer(string $class, Container $container): ILayerProvider
+    public static function createModuleLayer(string $module, Container $container): ILayerProvider
     {
-        return (new Layer(LayerType::MODULE, $class, $container))->get();
+        return (new Layer(LayerType::MODULE, $module, $container))->get();
     }
 
-    public static function createControllerLayer(string $class, Container $container): ILayerProvider
+    public static function createControllerLayer(string $controller, Container $container): ILayerProvider
     {
-        return (new Layer(LayerType::CONTROLLER, $class, $container))->get();
+        return (new Layer(LayerType::CONTROLLER, $controller, $container))->get();
     }
 
-    public static function createProviderLayer(string $class, Container $container): ILayerProvider
+    public static function createProviderLayer(string $provider, Container $container): ILayerProvider
     {
-        return (new Layer(LayerType::SERVICE, $class, $container))->get();
+        return (new Layer(LayerType::PROVIDER, $provider, $container))->get();
     }
 }
