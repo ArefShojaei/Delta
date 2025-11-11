@@ -2,32 +2,16 @@
 
 namespace Delta\Application\Layers\Module\Abilities;
 
-use Delta\Components\Layer\Attributes\Injectable;
-use ReflectionClass;
+use Delta\Components\Layer\LayerFactory;
 
 
 trait CanDispatchProviders
 {
     protected function dispatch(array $providers) {
         foreach ($providers as $provider) {
-            $providerReflection = new ReflectionClass($provider);
+            $providerLayer = LayerFactory::createProviderLayer($provider, $this->container);
 
-            if (!$this->isInjected($providerReflection)) break;
-
-            dd($providerReflection->newInstance("Hello"));
+            $providerLayer->process();
         }
-    }
-
-    private function isInjected(ReflectionClass $reflection)
-    {
-        $attributes = $reflection->getAttributes(Injectable::class);
-
-        return empty($attributes) ? false : true;
-    }
-
-    private function getProvider(ReflectionClass $reflection) {
-        $attributes = $reflection->getAttributes(Injectable::class);
-
-        return current($attributes)->newInstance();
     }
 }
