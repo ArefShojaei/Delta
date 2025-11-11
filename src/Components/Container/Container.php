@@ -13,19 +13,29 @@ final class Container implements IContainer
     private array $instances = [];
 
 
-    public function bind(string $abstract, string|Closure $concrete): void
+    public function singleton(string $abstract, string|Closure $concrete): void
     {
-        $this->bindings[$abstract] = $concrete;
+        $this->bind($abstract, $concrete, true);
+    }
+
+    public function bind(string $abstract, string|Closure $concrete, bool $isSingleton = false): void
+    {
+        $this->bindings[$abstract] = [$isSingleton, $concrete];
     }
 
     public function resolve(string $abstract): ?object
     {
         if (!$this->has($abstract)) return null;
 
-        $concrete = $this->bindings[$abstract];
+        [$isSingleton, $concrete] = $this->bindings[$abstract];
 
+        # Is Clouser
         if ($concrete instanceof Closure) return $concrete($this);
 
+        # Is Singleton
+        if ($isSingleton) return $concrete::getInstance();
+
+        # Is Instnace
         if (isset($this->instances[$abstract])) return $this->instances[$abstract];
 
         $this->instances[$abstract] = new $concrete;
