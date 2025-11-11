@@ -16,7 +16,6 @@
     ],
     "require": {
         "arefshojaei/kitdash": "^1.4",
-        "arefshojaei/redux": "^2.3",
         "arefshojaei/class-validator": "^1.4"
     }
 }
