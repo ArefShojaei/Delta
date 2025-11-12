@@ -12,6 +12,7 @@ final class RouteMeta implements IPropertyGetter
     public function __construct(
         private ReflectionMethod $method,
         private ReflectionClass $reflection,
+        private array $providers,
     ) {}
 
     public function __get($prop): mixed
