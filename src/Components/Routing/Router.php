@@ -11,12 +11,17 @@ use Delta\Components\Routing\{
     Exceptions\RouteNotFound,
     Interfaces\Router as IRouter
 };
+use Delta\Components\Container\Container;
+use Delta\Components\Layer\Enums\LayerType;
+use Delta\Store\LayerStore;
 
 
 final class Router implements IRouter
 {
     private array $routes = [];
 
+
+    public function __construct(private Container $container) {}
 
     public function addRoute(
         string $method,
@@ -65,12 +70,14 @@ final class Router implements IRouter
      */
     public function dispatch(Route $route, array $http): void
     {
+        $providers = $this->container->resolve(LayerStore::class)->getDependencies(LayerType::PROVIDER->value);
+
         $currentClassReflection = $route->meta->reflection;
 
         $currentClassMethodReflection = $route->meta->method;
 
         $currentClassMethodReflection->invokeArgs(
-            $currentClassReflection->newInstance(),
+            $currentClassReflection->newInstanceArgs($providers),
             $http,
         );
     }
