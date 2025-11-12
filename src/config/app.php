@@ -10,6 +10,7 @@ return [
      * Application service providers as dependencies before bootstrapping the server
      */
     "providers" => [
+        Delta\Providers\StoreServiceProvider::class,
         Delta\Providers\RouterServiceProvider::class,
         Delta\Providers\HttpServiceProvider::class,
     ],
