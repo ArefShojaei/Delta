@@ -3,8 +3,10 @@
 namespace Delta\Application\Layers\Controller\Abilities;
 
 use Delta\Components\Layer\Attributes\Controller;
+use Delta\Components\Layer\Enums\LayerType;
 use Delta\Components\Routing\Attributes\{Middleware, Route};
 use Delta\Components\Routing\{RouteMeta, Router};
+use Delta\Store\LayerStore;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -52,9 +54,12 @@ trait CanRegisterRoute
 
             $attribute = current($attributes)->newInstance();
 
+            $providers = $this->container->resolve(LayerStore::class)->getDependencies(LayerType::PROVIDER->value) ?? [];
+
             $routes[$attribute->method][$attribute->path]["meta"] = new RouteMeta(
                 method: $method,
-                reflection: $reflection
+                reflection: $reflection,
+                providers: $providers
             );
 
             $middlewares = array_merge($classMiddlewares, $methodMiddlewares);
