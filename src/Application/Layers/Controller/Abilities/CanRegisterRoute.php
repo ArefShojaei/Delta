@@ -40,7 +40,9 @@ trait CanRegisterRoute
 
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
 
-        foreach ($methods as $method) {
+        $filteredMethods = array_filter($methods, fn(ReflectionMethod $method) => $method->name !== "__construct");
+
+        foreach ($filteredMethods as $method) {
             $methodMiddlewares = $this->getMiddlewares($method);
 
             $attributes = $method->getAttributes(
