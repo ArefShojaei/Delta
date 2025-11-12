@@ -6,7 +6,7 @@
         "psr-4": {
             "Delta\\": "src/"
         },
-        "files": ["src/helpers/*"]
+        "files": ["src/helpers/dd.php"]
     },
     "authors": [
         {
