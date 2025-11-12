@@ -13,7 +13,7 @@ final class RouterServiceProvider implements IServiceProvider
 {
     public function register(Container $container): void
     {
-        $container->bind(Router::class, Router::class);
+        $container->bind(Router::class, fn(Container $container) => new Router($container));
     }
 
     public function boot(Container $container): void {}
