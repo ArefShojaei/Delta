@@ -11,7 +11,7 @@ use Delta\Application\Layers\Module\Abilities\{
     CanGetAttribute,
 };
 use Delta\Components\Container\Container;
-use Delta\Store\LayerStore;
+
 
 final class ModuleLayer implements ILayerProvider
 {
@@ -33,12 +33,12 @@ final class ModuleLayer implements ILayerProvider
 
     public function process(): void
     {
-        $this->dispatchProviders($this->getAttributeProviders());
+        $this->getAttributeProviders() && $this->dispatchProviders($this->getAttributeProviders());
 
-        $this->dispatchControllers($this->getAttributeControllers());
+        $this->getAttributeControllers() && $this->dispatchControllers($this->getAttributeControllers());
 
-        $this->dispatchImports($this->getAttributeImports());
+        $this->getAttributeImports() && $this->dispatchImports($this->getAttributeImports());
 
-        $this->dispatchExports($this->getAttributeExports());
+        $this->getAttributeExports() && $this->dispatchExports($this->getAttributeExports());
     }
 }

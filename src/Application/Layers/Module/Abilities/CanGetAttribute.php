@@ -21,27 +21,27 @@ trait CanGetAttribute
     {
         $options = $this->getAttribute()->options;
 
-        return $options["controllers"];
+        return $options["controllers"] ?? [];
     }
 
     private function getAttributeProviders(): array
     {
         $options = $this->getAttribute()->options;
 
-        return $options["providers"];
+        return $options["providers"] ?? [];
     }
 
     private function getAttributeImports(): array
     {
         $options = $this->getAttribute()->options;
 
-        return $options["imports"];
+        return $options["imports"] ?? [];
     }
 
     private function getAttributeExports(): array
     {
         $options = $this->getAttribute()->options;
 
-        return $options["exports"];
+        return $options["exports"] ?? [];
     }
 }
