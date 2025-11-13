@@ -78,7 +78,7 @@ trait CanRegisterRoute
             foreach ($meta as $route => $data) {
                 $router->addRoute(
                     method: $method,
-                    path: $prefix . ltrim($route, "/"),
+                    path: $prefix . $route,
                     meta: $data["meta"],
                     middlewares: $data["middlewares"],
                 );
