@@ -69,9 +69,9 @@ final class Router implements IRouter
 
         $currentClassMethodReflection = $route->meta->method;
 
-        $providers = $route->meta->providers;
+        $providers = array_reverse($route->meta->providers);
 
-        
+
         $currentClassMethodReflection->invokeArgs(
             $currentClassReflection->newInstanceArgs($providers),
             $http,
