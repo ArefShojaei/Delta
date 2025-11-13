@@ -12,7 +12,13 @@ final class LayerStore implements ILayerStore
 
     public function addDependency(string $layer, object $instance): void
     {
-        $this->dependencies[$layer][] = $instance;
+        if (!isset($this->dependencies[$layer])) {
+            $this->dependencies[$layer] = [];
+        }
+
+        if (!in_array($instance, $this->dependencies[$layer])) {
+            $this->dependencies[$layer][] = $instance;
+        }
     }
 
     public function getDependencies(?string $layer = null): ?array
