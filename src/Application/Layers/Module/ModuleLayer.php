@@ -33,12 +33,12 @@ final class ModuleLayer implements ILayerProvider
 
     public function process(): void
     {
-        $this->getAttributeProviders() && $this->dispatchProviders($this->getAttributeProviders());
-
-        $this->getAttributeControllers() && $this->dispatchControllers($this->getAttributeControllers());
-
         $this->getAttributeImports() && $this->dispatchImports($this->getAttributeImports());
 
         $this->getAttributeExports() && $this->dispatchExports($this->getAttributeExports());
+
+        $this->getAttributeProviders() && $this->dispatchProviders($this->getAttributeProviders());
+
+        $this->getAttributeControllers() && $this->dispatchControllers($this->getAttributeControllers());
     }
 }
