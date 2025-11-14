@@ -7,5 +7,5 @@ use Delta\Application\Application;
 
 interface DeltaFactory
 {
-    public static function createApp(string $module): Application;
+    public static function createApp(string|object $module): Application;
 }

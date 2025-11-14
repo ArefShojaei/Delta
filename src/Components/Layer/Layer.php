@@ -19,7 +19,7 @@ final class Layer implements ILayer
     private ILayerProvider $layerProvider;
 
 
-    public function __construct(LayerType $type, string $class, Container $container)
+    public function __construct(LayerType $type, string|object $class, Container $container)
     {
         $type = ucfirst($type->value);
 

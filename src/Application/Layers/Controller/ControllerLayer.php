@@ -12,7 +12,7 @@ final class ControllerLayer implements ILayerProvider
 {
     use CanRegisterRoute;
 
-    public function __construct(private readonly string $controller, private Container $container) {}
+    public function __construct(private readonly string|object $controller, private Container $container) {}
 
     public function process(): void {
         $controllerReflection = new ReflectionClass($this->controller);

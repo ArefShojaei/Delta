@@ -18,7 +18,7 @@ final class Application implements IApplication
     private Bootstrap $bootstrap;
 
 
-    public function __construct(private readonly string $module)
+    public function __construct(private readonly string|object $module)
     {
         $this->bootstrap = new Bootstrap;
     }

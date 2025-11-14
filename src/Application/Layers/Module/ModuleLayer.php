@@ -29,7 +29,7 @@ final class ModuleLayer implements ILayerProvider
 
     use CanGetAttribute;
 
-    public function __construct(private readonly string $module, private Container $container) {}
+    public function __construct(private readonly string|object $module, private Container $container) {}
 
     public function process(): void
     {
