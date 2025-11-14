@@ -34,7 +34,7 @@ final class Application implements IApplication
     {
         $this->bootstrap->init();
 
-        $this->registerLayers();
+        $this->registerModuleLayer();
     }
 
     public function run(): void
