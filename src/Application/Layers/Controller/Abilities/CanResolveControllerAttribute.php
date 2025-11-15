@@ -22,7 +22,7 @@ trait CanResolveControllerAttribute
         return $attribute->prefix;
     }
 
-    private function getRoutePrefixName(ReflectionClass $reflection): ?string
+    private function getRoutePrefixName(ReflectionClass $reflection): string
     {
         $attribute = $this->getControllerAttribute($reflection);
 

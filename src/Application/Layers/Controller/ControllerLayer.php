@@ -2,7 +2,11 @@
 
 namespace Delta\Application\Layers\Controller;
 
-use Delta\Application\Layers\Controller\Abilities\CanRegisterRoute;
+use Delta\Application\Layers\Controller\Abilities\{
+    CanRegisterRoute,
+    CanResolveControllerAttribute,
+    CanResolveRouteAttribute,
+};
 use Delta\Components\Container\Container;
 use Delta\Components\Layer\Interfaces\LayerProvider as ILayerProvider;
 use ReflectionClass;
@@ -10,16 +14,18 @@ use ReflectionClass;
 
 final class ControllerLayer implements ILayerProvider
 {
-    use CanRegisterRoute;
+    use CanRegisterRoute, CanResolveControllerAttribute, CanResolveRouteAttribute;
+
 
     public function __construct(private readonly string|object $controller, private Container $container) {}
 
-    public function process(): void {
+    public function process(): void
+    {
         $controllerReflection = new ReflectionClass($this->controller);
 
         $this->registerRoutes(
             prefix: $this->getPrefix($controllerReflection),
-            routes: $this->getRoutes($controllerReflection)
+            routes: $this->getRoutes($controllerReflection),
         );
     }
 }
