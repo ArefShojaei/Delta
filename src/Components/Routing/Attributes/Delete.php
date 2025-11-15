@@ -8,8 +8,8 @@ use Delta\Components\Http\Request;
 #[Attribute(Attribute::TARGET_METHOD)]
 class Delete extends Route
 {
-    public function __construct(public string $path = "")
+    public function __construct(public string $path = "", public string $name = "")
     {
-        parent::__construct(method: Request::DELETABLE, path: $path);
+        parent::__construct(method: Request::DELETABLE, path: $path, name: $name);
     }
 }

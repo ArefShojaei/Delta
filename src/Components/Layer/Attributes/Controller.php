@@ -10,6 +10,7 @@ class Controller
 {
     /**
      * @param string $prefix Route prefix
+     * @param string $name Route name
      */
-    public function __construct(public string $prefix = "/") {}
+    public function __construct(public string $prefix = "/", public string $name = "") {}
 }

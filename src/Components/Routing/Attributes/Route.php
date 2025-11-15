@@ -10,6 +10,7 @@ abstract class Route
     public function __construct(
         public string $method = "",
         public string $path = "",
+        public string $name = "",
         public array $middlewares = [],
     ) {}
 
@@ -18,6 +19,7 @@ abstract class Route
         return [
             "method" => $this->method,
             "path" => $this->path,
+            "name" => $this->name,
             "middlewares" => $this->middlewares
         ];
     }
