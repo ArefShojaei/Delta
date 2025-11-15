@@ -12,7 +12,7 @@ use ReflectionClass;
 
 final class ProviderLayer implements ILayerProvider
 {
-    public function __construct(private readonly string|object $provider, private Container $container) {}
+    public function __construct(private readonly string|object $provider,private Container $container) {}
 
     public function process(): void
     {

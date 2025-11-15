@@ -7,8 +7,7 @@ use Delta\Application\Layers\Module\Abilities\{
     CanDispatchControllers,
     CanDispatchProviders,
     CanDispatchImports,
-    CanDispatchExports,
-    CanGetAttribute,
+    CanGetAttribute
 };
 use Delta\Components\Container\Container;
 
@@ -17,14 +16,12 @@ final class ModuleLayer implements ILayerProvider
 {
     use CanDispatchControllers,
         CanDispatchProviders,
-        CanDispatchImports,
-        CanDispatchExports {
-        CanDispatchControllers::dispatch insteadof CanDispatchProviders, CanDispatchImports, CanDispatchExports;
+        CanDispatchImports {
+        CanDispatchControllers::dispatch insteadof CanDispatchProviders, CanDispatchImports;
 
         CanDispatchControllers::dispatch as private dispatchControllers;
         CanDispatchProviders::dispatch as private dispatchProviders;
         CanDispatchImports::dispatch as private dispatchImports;
-        CanDispatchExports::dispatch as private dispatchExports;
     }
 
     use CanGetAttribute;
@@ -33,12 +30,10 @@ final class ModuleLayer implements ILayerProvider
 
     public function process(): void
     {
-        $this->getAttributeImports() && $this->dispatchImports($this->getAttributeImports());
-
-        $this->getAttributeExports() && $this->dispatchExports($this->getAttributeExports());
-
         $this->getAttributeProviders() && $this->dispatchProviders($this->getAttributeProviders());
 
         $this->getAttributeControllers() && $this->dispatchControllers($this->getAttributeControllers());
+
+        $this->getAttributeImports() && $this->dispatchImports($this->getAttributeImports());
     }
 }
