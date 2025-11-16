@@ -7,6 +7,7 @@ use Delta\Application\Layers\Controller\Abilities\{
     CanResolveControllerAttribute,
     CanResolveRouteAttribute,
 };
+use Delta\Application\Layers\Provider\Abilities\CanResolveProvider;
 use Delta\Components\Container\Container;
 use Delta\Components\Layer\Interfaces\LayerProvider as ILayerProvider;
 use ReflectionClass;
@@ -14,7 +15,10 @@ use ReflectionClass;
 
 final class ControllerLayer implements ILayerProvider
 {
-    use CanRegisterRoute, CanResolveControllerAttribute, CanResolveRouteAttribute;
+    use CanRegisterRoute,
+        CanResolveControllerAttribute,
+        CanResolveRouteAttribute,
+        CanResolveProvider;
 
 
     public function __construct(private readonly string|object $controller, private Container $container) {}

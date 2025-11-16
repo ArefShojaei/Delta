@@ -5,7 +5,7 @@ namespace Delta\Store\Interfaces;
 
 interface LayerStore
 {
-    public function addDependency(string $layer, object $instance): void;
+    public function addDependency(string $abstract, object $concrete): void;
 
-    public function getDependencies(?string $layer = null): ?array;
+    public function getDependencies(?string $abstract = null): ?array;
 }

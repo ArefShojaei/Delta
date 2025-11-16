@@ -10,21 +10,30 @@ final class LayerStore implements ILayerStore
     private $dependencies = [];
 
 
-    public function addDependency(string $layer, object $instance): void
+    /**
+     * @param string $abstract (e.g., "provider.user", "provider.swagger")
+     */
+    public function addDependency(string $abstract, object $concrete): void
     {
-        if (!isset($this->dependencies[$layer])) {
-            $this->dependencies[$layer] = [];
+        [$layer, $component] = explode(".", $abstract);
+
+
+        if (!isset($this->dependencies[$layer][$component])) {
+            $this->dependencies[$layer][$component] = [];
         }
 
-        if (!in_array($instance, $this->dependencies[$layer])) {
-            $this->dependencies[$layer][] = $instance;
+        if (!in_array($concrete, $this->dependencies[$layer][$component])) {
+            $this->dependencies[$layer][$component][] = $concrete;
         }
     }
 
-    public function getDependencies(?string $layer = null): ?array
+    public function getDependencies(?string $abstract = null): ?array
     {
-        if (is_null($layer)) return $this->dependencies;
+        if (is_null($abstract)) return $this->dependencies;
 
-        return $this->dependencies[$layer] ?? null;
+
+        [$layer, $component] = explode(".", $abstract);
+
+        return $this->dependencies[$layer][$component] ?? null;
     }
 }

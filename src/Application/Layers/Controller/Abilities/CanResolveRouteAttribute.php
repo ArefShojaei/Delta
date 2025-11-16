@@ -7,7 +7,6 @@ use ReflectionMethod;
 use ReflectionAttribute;
 use Delta\Store\LayerStore;
 use Delta\Components\Routing\RouteMeta;
-use Delta\Components\Layer\Enums\LayerType;
 use Delta\Components\Routing\Attributes\{Route, Middleware};
 
 
@@ -63,8 +62,11 @@ trait CanResolveRouteAttribute
 
             if (!empty($key)) $this->setGlobalRouteName($key, $attribute->path);
 
-            
-            $providers = $this->container->resolve(LayerStore::class)->getDependencies(LayerType::PROVIDER->value) ?? [];
+
+            $abstract = $this->getProviderLayerName($this->getProviderName($reflection));
+
+            $providers = $this->container->resolve(LayerStore::class)->getDependencies($abstract) ?? [];
+
 
             $routes[$attribute->method][$attribute->path]["meta"] = new RouteMeta(
                 method: $method,
