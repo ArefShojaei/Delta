@@ -21,7 +21,20 @@ final class Request implements IRequest
     public const DELETABLE = "DELETE";
 
 
+    private array $_variables = [];
+
+    
     public function __construct(private array $headers) {}
+
+    public function __set(string $prop, mixed $value): void
+    {
+        $this->_variables[$prop] = $value;
+    }
+
+    public function __get(string $prop): mixed
+    {
+        return $this->_variables[$prop] ?? null;
+    }
 
     public function header(string|HttpRequestHeader $key): ?string
     {

@@ -2,6 +2,7 @@
 
 namespace Delta\Components\Http\Interfaces;
 
+use Delta\Common\Interfaces\{PropertySetter, PropertyGetter};
 use Delta\Components\Http\Enums\HttpRequestHeader;
 
 
@@ -40,4 +41,8 @@ interface RequestUrl
 }
 
 
-interface Request extends RequestHeader, RequestUrl {}
+interface Request extends
+    RequestHeader,
+    RequestUrl,
+    PropertySetter,
+    PropertyGetter {}
