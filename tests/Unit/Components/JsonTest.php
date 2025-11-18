@@ -2,7 +2,10 @@
 
 namespace Tests\Unit\Components;
 
-use Delta\Components\Json\Json;
+use Delta\Components\Json\{
+    Json,
+    Interfaces\Json as IJson
+};
 use PHPUnit\Framework\TestCase;
 
 
@@ -14,6 +17,18 @@ final class JsonTest extends TestCase
             "id" => 1,
             "name" => "Aref"
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function implementsJsonInterface(): void
+    {
+        $interfaces = class_implements(Json::class);
+
+        $this->assertIsArray($interfaces);
+        $this->assertNotEmpty($interfaces);
+        $this->assertArrayHasKey(IJson::class, $interfaces);
     }
 
     /**
