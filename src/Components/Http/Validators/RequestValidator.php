@@ -38,4 +38,9 @@ abstract class RequestValidator implements IRequestValidator
     {
         return $this->validator->getErrors();
     }
+
+    final public function getEntity(): object
+    {
+        return $this->entity;
+    }
 }

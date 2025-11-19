@@ -8,4 +8,6 @@ interface RequestValidator
     public function validate(): bool;
 
     public function getValidationErrors(): array;
+
+    public function getEntity(): object;
 }
