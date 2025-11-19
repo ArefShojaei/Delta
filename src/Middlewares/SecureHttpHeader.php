@@ -22,7 +22,28 @@ final class SecureHttpHeader implements IMiddleware
         $response->header("Content-Security-Policy", "DENY");
         $response->header("Referrer-Policy", "no-referrer");
         $response->header("Server", "nginx");
-
+        $response->header("X-Frame-Options", "DENY");
+        $response->header("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+        $response->header("Referrer-Policy", "camera=(), microphone=(), geolocation=(), payment=(), fullscreen=(self)");
+        $response->header("Cross-Origin-Opener-Policy", "same-origin");
+        $response->header("Cross-Origin-Embedder-Policy", "require-corp");
+        $response->header("Cross-Origin-Resource-Policy", "same-origin");
+        $response->header("X-XSS-Protection", "0");
+        $response->header("Pragma", "no-cache");
+        $response->header("Expires", "0");
+        $response->header(
+            "Content-Security-Policy",
+            "default-src 'self'; " .
+                "script-src 'self' 'unsafe-inline' https:; " .
+                "style-src 'self' 'unsafe-inline' https: 'unsafe-inline'; " .
+                "img-src 'self' data: https:; " .
+                "font-src 'self' https:; " .
+                "connect-src 'self' https:; " .
+                "frame-ancestors 'none'; " .
+                "upgrade-insecure-requests; " .
+                "block-all-mixed-content"
+        );
+        
         return $next();
     }
 }
