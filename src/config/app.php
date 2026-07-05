@@ -4,7 +4,10 @@ return [
     /**
      * Application name
      */
-    "name" => \Delta\Components\Env\DotEnvEnvironment::get("APP_NAME", "Delta - PHP Framework"),
+    "name" => \Delta\Components\Env\DotEnvEnvironment::get(
+        "APP_NAME",
+        "Delta - PHP Framework",
+    ),
 
     /**
      * Application service providers as dependencies before bootstrapping the server
@@ -21,5 +24,5 @@ return [
     "middlewares" => [
         Delta\Middlewares\CORS::class,
         Delta\Middlewares\SecureHttpHeader::class,
-    ]
+    ],
 ];

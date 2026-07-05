@@ -5,7 +5,6 @@ namespace Delta\Components\Http\Interfaces;
 use Delta\Common\Interfaces\{PropertySetter, PropertyGetter};
 use Delta\Components\Http\Enums\HttpRequestHeader;
 
-
 interface RequestHeader
 {
     public function header(string|HttpRequestHeader $key): ?string;
@@ -39,7 +38,6 @@ interface RequestUrl
 
     public function host(): string;
 }
-
 
 interface Request extends
     RequestHeader,

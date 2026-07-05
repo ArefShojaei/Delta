@@ -2,7 +2,6 @@
 
 namespace Delta\Components\Http\Interfaces;
 
-
 interface RequestValidator
 {
     public function validate(): bool;

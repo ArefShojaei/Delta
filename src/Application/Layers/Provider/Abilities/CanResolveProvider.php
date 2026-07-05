@@ -2,12 +2,8 @@
 
 namespace Delta\Application\Layers\Provider\Abilities;
 
-use Delta\Components\Layer\{
-    Attributes\Injectable,
-    Enums\LayerType
-};
+use Delta\Components\Layer\{Attributes\Injectable, Enums\LayerType};
 use ReflectionClass;
-
 
 trait CanResolveProvider
 {

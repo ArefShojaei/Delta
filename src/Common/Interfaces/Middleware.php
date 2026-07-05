@@ -3,8 +3,8 @@
 namespace Delta\Common\Interfaces;
 
 use Closure;
-use Delta\Components\Http\{Request, Response};
 
+use Delta\Components\Http\{Request, Response};
 
 interface Middleware
 {

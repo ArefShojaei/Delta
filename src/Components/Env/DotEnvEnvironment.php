@@ -4,11 +4,9 @@ namespace Delta\Components\Env;
 
 use Delta\Components\Env\interfaces\DotEnvEnvironment as IDotEnvEnvironment;
 
-
 final class DotEnvEnvironment implements IDotEnvEnvironment
 {
     public const FILENAME = ".env";
-
 
     public function load(string $path): void
     {
@@ -31,8 +29,10 @@ final class DotEnvEnvironment implements IDotEnvEnvironment
         }
     }
 
-    public static function get(string $key, ?string $defaultValue = null): ?string
-    {
+    public static function get(
+        string $key,
+        ?string $defaultValue = null,
+    ): ?string {
         return $_ENV[$key] ?? $defaultValue;
     }
 

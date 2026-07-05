@@ -4,7 +4,6 @@ namespace Delta\Components\Log;
 
 use Delta\Components\Log\Enums\LogLevelType;
 
-
 class Log
 {
     protected function createMessage(

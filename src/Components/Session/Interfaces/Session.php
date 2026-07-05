@@ -2,7 +2,6 @@
 
 namespace Delta\Components\Session\Interfaces;
 
-
 interface Session
 {
     public static function set(string $key, string $value): void;

@@ -2,9 +2,9 @@
 
 namespace Delta\Components\Http\Exceptions;
 
-use Delta\Components\Http\HttpStatus;
 use Exception;
 
+use Delta\Components\Http\HttpStatus;
 
 final class InternalServerError extends Exception
 {

@@ -4,7 +4,6 @@ namespace Delta\Components\Http\Interfaces;
 
 use Delta\Components\Http\HttpStatus;
 
-
 interface JsonResponse
 {
     public function json(array $data): void;
@@ -16,7 +15,6 @@ interface HtmlResponse
 }
 
 interface OutputResponse extends JsonResponse, HtmlResponse {}
-
 
 interface Response extends OutputResponse
 {

@@ -4,7 +4,6 @@ namespace Delta\Components\Log\Abilities;
 
 use Delta\Components\Log\Enums\LogLevelType as Log;
 
-
 trait CanLogMessage
 {
     public function info(string $message): string

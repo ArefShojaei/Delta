@@ -4,7 +4,6 @@ namespace Delta\Components\Routing;
 
 use Delta\Components\Routing\Interfaces\RouterValidator as IRouterValidator;
 
-
 final class RouterValidator implements IRouterValidator
 {
     public function __construct(private array $routes) {}

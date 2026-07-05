@@ -2,18 +2,17 @@
 
 namespace Delta\Components\Http\Validators;
 
-use Delta\Components\Http\Interfaces\RequestValidator as IRequestValidator;
 use Validator\Validator;
 
+use Delta\Components\Http\Interfaces\RequestValidator as IRequestValidator;
 
 abstract class RequestValidator implements IRequestValidator
 {
     private Validator $validator;
 
-
     public function __construct(private array &$data, private object $entity)
     {
-        $this->validator = new Validator;
+        $this->validator = new Validator();
     }
 
     private function setEntityProps(): void

@@ -2,7 +2,6 @@
 
 namespace Delta\Components\Http\Enums;
 
-
 enum HttpRequestHeader: string
 {
     case METHOD = "REQUEST_METHOD";

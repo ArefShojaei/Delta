@@ -11,7 +11,6 @@ use Delta\Components\Http\{
 };
 use Delta\Components\Routing\Router;
 
-
 final class HttpFactory implements IHttpFactory
 {
     /**
@@ -32,7 +31,7 @@ final class HttpFactory implements IHttpFactory
         Response $response,
         Router $router,
     ): Http {
-        return (new HttpBuilder)
+        return (new HttpBuilder())
             ->setRouter($router)
             ->setRequest($request)
             ->setResponse($response)

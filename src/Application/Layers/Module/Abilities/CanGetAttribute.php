@@ -2,9 +2,9 @@
 
 namespace Delta\Application\Layers\Module\Abilities;
 
-use Delta\Components\Layer\Attributes\Module;
 use ReflectionClass;
 
+use Delta\Components\Layer\Attributes\Module;
 
 trait CanGetAttribute
 {

@@ -3,16 +3,21 @@
 namespace Delta\Middlewares;
 
 use Closure;
-use Delta\Common\Interfaces\Middleware as IMiddleware;
-use Delta\Components\Http\Request;
-use Delta\Components\Http\Response;
 
+use Delta\Common\Interfaces\Middleware as IMiddleware;
+use Delta\Components\Http\{Request, Response};
 
 final class SecureHttpHeader implements IMiddleware
 {
-    public function handle(Request $request, Response $response, Closure $next): bool
-    {
-        $response->header("Permissions-Policy", "geolocation=(), microphone=()");
+    public function handle(
+        Request $request,
+        Response $response,
+        Closure $next,
+    ): bool {
+        $response->header(
+            "Permissions-Policy",
+            "geolocation=(), microphone=()",
+        );
         $response->header("Referrer-Policy", "strict-origin-when-cross-origin");
         $response->header("Content-Type", "application/json; charset=utf-8");
         $response->header("Cache-Control", "no-store, no-cache, private");
@@ -23,8 +28,14 @@ final class SecureHttpHeader implements IMiddleware
         $response->header("Referrer-Policy", "no-referrer");
         $response->header("Server", "nginx");
         $response->header("X-Frame-Options", "DENY");
-        $response->header("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
-        $response->header("Referrer-Policy", "camera=(), microphone=(), geolocation=(), payment=(), fullscreen=(self)");
+        $response->header(
+            "Strict-Transport-Security",
+            "max-age=63072000; includeSubDomains; preload",
+        );
+        $response->header(
+            "Referrer-Policy",
+            "camera=(), microphone=(), geolocation=(), payment=(), fullscreen=(self)",
+        );
         $response->header("Cross-Origin-Opener-Policy", "same-origin");
         $response->header("Cross-Origin-Embedder-Policy", "require-corp");
         $response->header("Cross-Origin-Resource-Policy", "same-origin");
@@ -41,9 +52,9 @@ final class SecureHttpHeader implements IMiddleware
                 "connect-src 'self' https:; " .
                 "frame-ancestors 'none'; " .
                 "upgrade-insecure-requests; " .
-                "block-all-mixed-content"
+                "block-all-mixed-content",
         );
-        
+
         return $next();
     }
 }

@@ -2,16 +2,17 @@
 
 namespace Tests\Unit\Components;
 
-use Delta\Components\Env\DotEnvEnvironment;
-use Delta\Components\Env\interfaces\DotEnvEnvironment as IDotEnvEnvironment;
 use PHPUnit\Framework\TestCase;
 
+use Delta\Components\Env\{
+    DotEnvEnvironment,
+    interfaces\DotEnvEnvironment as IDotEnvEnvironment,
+};
 
 final class EnvTest extends TestCase
 {
     private DotEnvEnvironment $env;
 
-    
     protected function setUp(): void
     {
         parent::setUp();

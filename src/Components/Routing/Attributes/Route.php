@@ -20,7 +20,7 @@ abstract class Route
             "method" => $this->method,
             "path" => $this->path,
             "name" => $this->name,
-            "middlewares" => $this->middlewares
+            "middlewares" => $this->middlewares,
         ];
     }
 }

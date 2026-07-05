@@ -4,7 +4,6 @@ namespace Delta\Common;
 
 use Delta\Common\Interfaces\{Arrayable, PropertySetter};
 
-
 abstract class Entity implements PropertySetter, Arrayable
 {
     public function __set(string $prop, mixed $value): void

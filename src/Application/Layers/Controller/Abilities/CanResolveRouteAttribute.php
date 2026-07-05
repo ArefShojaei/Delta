@@ -5,10 +5,10 @@ namespace Delta\Application\Layers\Controller\Abilities;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionAttribute;
+
 use Delta\Store\LayerStore;
 use Delta\Components\Routing\RouteMeta;
 use Delta\Components\Routing\Attributes\{Route, Middleware};
-
 
 trait CanResolveRouteAttribute
 {
@@ -26,8 +26,9 @@ trait CanResolveRouteAttribute
         return $reflection->name;
     }
 
-    private function getMiddlewares(ReflectionClass|ReflectionMethod $reflection): array
-    {
+    private function getMiddlewares(
+        ReflectionClass|ReflectionMethod $reflection,
+    ): array {
         $attributes = $reflection->getAttributes(Middleware::class);
 
         if (empty($attributes)) return [];
@@ -45,7 +46,10 @@ trait CanResolveRouteAttribute
 
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
 
-        $filteredMethods = array_filter($methods, fn(ReflectionMethod $method) => $method->name !== "__construct");
+        $filteredMethods = array_filter(
+            $methods,
+            fn(ReflectionMethod $method) => $method->name !== "__construct",
+        );
 
         foreach ($filteredMethods as $method) {
             $methodMiddlewares = $this->getMiddlewares($method);
@@ -57,26 +61,34 @@ trait CanResolveRouteAttribute
 
             $attribute = current($attributes)->newInstance();
 
-
             $key = $this->getRoutePrefixName($reflection) . $attribute->name;
 
-            if (!empty($key)) $this->setGlobalRouteName($key, $attribute->path);
+            if (!empty($key)) {
+                $this->setGlobalRouteName($key, $attribute->path);
+            }
 
+            $abstract = $this->getProviderLayerName(
+                $this->getProviderName($reflection),
+            );
 
-            $abstract = $this->getProviderLayerName($this->getProviderName($reflection));
+            $providers =
+                $this->container
+                    ->resolve(LayerStore::class)
+                    ->getDependencies($abstract) ?? [];
 
-            $providers = $this->container->resolve(LayerStore::class)->getDependencies($abstract) ?? [];
-
-
-            $routes[$attribute->method][$attribute->path]["meta"] = new RouteMeta(
+            $routes[$attribute->method][$attribute->path][
+                "meta"
+            ] = new RouteMeta(
                 method: $method,
                 reflection: $reflection,
-                providers: $providers
+                providers: $providers,
             );
 
             $middlewares = array_merge($classMiddlewares, $methodMiddlewares);
 
-            $routes[$attribute->method][$attribute->path]["middlewares"] = $middlewares;
+            $routes[$attribute->method][$attribute->path][
+                "middlewares"
+            ] = $middlewares;
         }
 
         return $routes;

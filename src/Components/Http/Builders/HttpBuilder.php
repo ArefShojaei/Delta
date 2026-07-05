@@ -10,7 +10,6 @@ use Delta\Components\Http\{
     Interfaces\HttpBuilder as IHttpBuilder,
 };
 
-
 final class HttpBuilder implements IHttpBuilder
 {
     private Request $request;
@@ -19,7 +18,6 @@ final class HttpBuilder implements IHttpBuilder
 
     private Router $router;
 
-    
     public function setRequest(Request $request): self
     {
         $this->request = $request;

@@ -9,11 +9,9 @@ use Delta\Components\{
     Json\Json,
 };
 
-
 class Response extends HttpStatus implements IResponse
 {
     private array $data;
-
 
     public function body(array $data): void
     {

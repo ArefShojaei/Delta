@@ -4,7 +4,6 @@ namespace Delta\Components\Routing;
 
 use Delta\Common\Interfaces\PropertyGetter as IPropertyGetter;
 
-
 final class Route implements IPropertyGetter
 {
     public function __construct(
@@ -14,7 +13,7 @@ final class Route implements IPropertyGetter
         private array $middlewares,
     ) {}
 
-    public function __get($prop): mixed
+    public function __get(string $prop): mixed
     {
         return $this->{$prop};
     }

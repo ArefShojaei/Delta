@@ -5,11 +5,9 @@ namespace Delta\Bootstrap;
 use Delta\Bootstrap\Interfaces\Bootstrap as IBootstrap;
 use Delta\Components\Container\Container;
 
-
 final class Bootstrap implements IBootstrap
 {
     private ?Container $container;
-
 
     public function init(): void
     {
@@ -25,7 +23,7 @@ final class Bootstrap implements IBootstrap
         $services = $app["providers"];
 
         foreach ($services as $service) {
-            $instance = new $service;
+            $instance = new $service();
 
             $instance->register($this->getContainer());
 

@@ -2,14 +2,12 @@
 
 namespace Delta\Application;
 
+use Delta\Bootstrap\Bootstrap;
+use Delta\Components\{Http\Kernel, Env\DotEnvEnvironment};
 use Delta\Application\{
     Interfaces\Application as IApplication,
-    Layers\LayerRegisteration
+    Layers\LayerRegisteration,
 };
-use Delta\Bootstrap\Bootstrap;
-use Delta\Components\Env\DotEnvEnvironment;
-use Delta\Components\Http\Kernel;
-
 
 final class Application implements IApplication
 {
@@ -17,15 +15,14 @@ final class Application implements IApplication
 
     private Bootstrap $bootstrap;
 
-
     public function __construct(private readonly string|object $module)
     {
-        $this->bootstrap = new Bootstrap;
+        $this->bootstrap = new Bootstrap();
     }
 
     public function configure(array $config): self
     {
-        (new DotEnvEnvironment)->load($config["env_path"]);
+        (new DotEnvEnvironment())->load($config["env_path"]);
 
         return $this;
     }

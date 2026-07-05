@@ -2,10 +2,9 @@
 
 namespace Delta\Providers;
 
-use Delta\Bootstrap\Interfaces\ServiceProvider as IServiceProvider;
-use Delta\Components\Container\Container;
 use Delta\Store\LayerStore;
-
+use Delta\Components\Container\Container;
+use Delta\Bootstrap\Interfaces\ServiceProvider as IServiceProvider;
 
 final class StoreServiceProvider implements IServiceProvider
 {

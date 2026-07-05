@@ -2,13 +2,12 @@
 
 namespace Delta\Common\Interfaces;
 
-use Delta\Components\Http\{ Request, Response };
+use Delta\Components\Http\{Request, Response};
 use Delta\Components\Routing\Attributes\{
     NotFound,
     ServerError,
     MethodNotAllowed,
 };
-
 
 interface ErrorController
 {

@@ -3,17 +3,15 @@
 namespace Delta\Components\Http\Builders;
 
 use Delta\Components\Http\{
-    Builders\ResponseBuilder as IResponseBuilder,
+    Interfaces\ResponseBuilder as IResponseBuilder,
     HttpStatus,
     Response,
 };
-
 
 final class ResponseBuilder implements IResponseBuilder
 {
     private Response $response;
 
-    
     public function __construct()
     {
         $this->response = new Response();

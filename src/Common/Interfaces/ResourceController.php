@@ -2,9 +2,8 @@
 
 namespace Delta\Common\Interfaces;
 
-use Delta\Components\Http\{ Request, Response };
-use Delta\Components\Routing\Attributes\{ Get, Post, Put, Patch, Delete };
-
+use Delta\Components\Http\{Request, Response};
+use Delta\Components\Routing\Attributes\{Get, Post, Put, Patch, Delete};
 
 interface ResourceController
 {

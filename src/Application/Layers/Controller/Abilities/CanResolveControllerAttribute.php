@@ -2,14 +2,13 @@
 
 namespace Delta\Application\Layers\Controller\Abilities;
 
-use Delta\Components\Layer\Attributes\Controller;
-use Delta\Components\Layer\Enums\LayerType;
 use ReflectionClass;
 
+use Delta\Components\Layer\{Attributes\Controller, Enums\LayerType};
 
 trait CanResolveControllerAttribute
 {
-    private function getControllerAttribute(ReflectionClass $reflection):object
+    private function getControllerAttribute(ReflectionClass $reflection): object
     {
         $attributes = $reflection->getAttributes(Controller::class);
 
@@ -38,7 +37,6 @@ trait CanResolveControllerAttribute
 
         [$name, $_] = explode($controllerLayerName, $className);
 
-        
         return $name;
     }
 }

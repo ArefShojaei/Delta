@@ -2,7 +2,6 @@
 
 namespace Delta\Components\Layer\Enums;
 
-
 enum LayerType: string
 {
     case MODULE = "module";

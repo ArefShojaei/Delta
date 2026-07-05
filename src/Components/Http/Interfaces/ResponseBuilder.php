@@ -4,7 +4,6 @@ namespace Delta\Components\Http\Interfaces;
 
 use Delta\Components\Http\{HttpStatus, Response};
 
-
 interface ResponseBuilder
 {
     public function setHeader(string $key, string $value): self;

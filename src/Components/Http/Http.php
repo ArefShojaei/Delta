@@ -3,13 +3,13 @@
 namespace Delta\Components\Http;
 
 use Exception;
+
 use Delta\Components\Http\Interfaces\Http as IHttp;
+use Delta\Components\Routing\{Exceptions\RouteNotFound, Router};
 use Delta\Components\Http\Exceptions\{
     InvalidHttpRequestMethod,
     InternalServerError,
 };
-use Delta\Components\Routing\{Exceptions\RouteNotFound, Router};
-
 
 final class Http implements IHttp
 {
@@ -41,19 +41,31 @@ final class Http implements IHttp
 
     public function applyMiddlewares(array $middlewares): void
     {
-        if (empty($middlewares)) return;
+        if (empty($middlewares)) {
+            return;
+        }
 
         $next = fn() => true;
 
         foreach ($middlewares as $middleware) {
-            $isOpenedNext = (new $middleware)->handle($this->request, $this->response, $next);
+            $isOpenedNext = (new $middleware())->handle(
+                $this->request,
+                $this->response,
+                $next,
+            );
 
-            if (is_null($isOpenedNext)) throw new InternalServerError();
+            if (is_null($isOpenedNext)) {
+                throw new InternalServerError();
+            }
 
-            if (!$isOpenedNext) break;
+            if (!$isOpenedNext) {
+                break;
+            }
         }
 
-        if (!$isOpenedNext) exit;
+        if (!$isOpenedNext) {
+            exit();
+        }
     }
 
     private function sendFailedResponseError(Exception $error): void
@@ -65,6 +77,6 @@ final class Http implements IHttp
             "message" => $error->getMessage(),
         ]);
 
-        exit;
+        exit();
     }
 }

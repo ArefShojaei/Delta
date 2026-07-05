@@ -4,7 +4,6 @@ namespace Delta\Components\Session;
 
 use Delta\Components\Session\Interfaces\Session as ISession;
 
-
 final class Session implements ISession
 {
     public static function set(string $key, string $value): void

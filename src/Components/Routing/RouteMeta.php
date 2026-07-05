@@ -2,10 +2,10 @@
 
 namespace Delta\Components\Routing;
 
-use Delta\Common\Interfaces\PropertyGetter as IPropertyGetter;
 use ReflectionClass;
 use ReflectionMethod;
 
+use Delta\Common\Interfaces\PropertyGetter as IPropertyGetter;
 
 final class RouteMeta implements IPropertyGetter
 {
@@ -15,7 +15,7 @@ final class RouteMeta implements IPropertyGetter
         private array $providers,
     ) {}
 
-    public function __get($prop): mixed
+    public function __get(string $prop): mixed
     {
         return $this->{$prop};
     }

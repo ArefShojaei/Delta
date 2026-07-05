@@ -2,12 +2,8 @@
 
 namespace Delta\Providers;
 
+use Delta\Components\{Container\Container, Routing\Router};
 use Delta\Bootstrap\Interfaces\ServiceProvider as IServiceProvider;
-use Delta\Components\{
-    Container\Container,
-    Routing\Router
-};
-
 
 final class RouterServiceProvider implements IServiceProvider
 {

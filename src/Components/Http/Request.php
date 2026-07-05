@@ -7,7 +7,6 @@ use Delta\Components\Http\{
     Enums\HttpRequestHeader,
 };
 
-
 final class Request implements IRequest
 {
     public const READABLE = "GET";
@@ -20,10 +19,8 @@ final class Request implements IRequest
 
     public const DELETABLE = "DELETE";
 
-
     private array $_variables = [];
 
-    
     public function __construct(private array $headers) {}
 
     public function __set(string $prop, mixed $value): void
@@ -38,7 +35,9 @@ final class Request implements IRequest
 
     public function header(string|HttpRequestHeader $key): ?string
     {
-        if ($key instanceof HttpRequestHeader) return $this->headers[$key->value] ?? null;
+        if ($key instanceof HttpRequestHeader) {
+            return $this->headers[$key->value] ?? null;
+        }
 
         return $this->headers[$key] ?? null;
     }

@@ -4,7 +4,6 @@ namespace Delta\Bootstrap\Interfaces;
 
 use Delta\Components\Container\Container;
 
-
 interface ServiceProvider
 {
     public function register(Container $container): void;

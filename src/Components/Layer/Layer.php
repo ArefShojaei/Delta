@@ -3,12 +3,11 @@
 namespace Delta\Components\Layer;
 
 use Delta\Components\Container\Container;
+use Delta\Components\Layer\Enums\LayerType;
 use Delta\Components\Layer\Interfaces\{
     Layer as ILayer,
-    LayerProvider as ILayerProvider
+    LayerProvider as ILayerProvider,
 };
-use Delta\Components\Layer\Enums\LayerType;
-
 
 final class Layer implements ILayer
 {
@@ -18,9 +17,11 @@ final class Layer implements ILayer
 
     private ILayerProvider $layerProvider;
 
-
-    public function __construct(LayerType $type, string|object $class, Container $container)
-    {
+    public function __construct(
+        LayerType $type,
+        string|object $class,
+        Container $container,
+    ) {
         $type = ucfirst($type->value);
 
         $layerProvider = "{$type}" . self::PROVIDER_SUFFIX_NAME;

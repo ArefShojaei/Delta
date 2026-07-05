@@ -5,18 +5,14 @@ namespace Delta\Components\Log;
 use Delta\Common\Interfaces\Singleton as ISingleton;
 use Delta\Components\Log\{
     Abilities\CanLogMessage,
-    Interfaces\CanLogMessage as ICanLogMessage
+    Interfaces\CanLogMessage as ICanLogMessage,
 };
 
-
-final class Logger extends Log implements
-    ISingleton,
-    ICanLogMessage
+final class Logger extends Log implements ISingleton, ICanLogMessage
 {
     use CanLogMessage;
 
     private static ?self $instance = null;
-
 
     private function __construct() {}
 

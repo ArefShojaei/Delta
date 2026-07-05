@@ -2,33 +2,28 @@
 
 namespace Delta\Components\Routing;
 
-use Delta\Components\Http\{
-    Request,
-    Exceptions\InvalidHttpRequestMethod
-};
+use Delta\Components\Http\{Request, Exceptions\InvalidHttpRequestMethod};
 use Delta\Components\Routing\{
     Attributes\NotFound,
     Exceptions\RouteNotFound,
-    Interfaces\Router as IRouter
+    Interfaces\Router as IRouter,
 };
-
 
 final class Router implements IRouter
 {
     private array $routes = [];
 
-
     public function addRoute(
         string $method,
         string $path,
         RouteMeta $meta,
-        array $middlewares = []
+        array $middlewares = [],
     ): void {
         $this->routes[$method][$path] = new Route(
             method: $method,
             path: $path,
             meta: $meta,
-            middlewares: $middlewares
+            middlewares: $middlewares,
         );
     }
 
@@ -51,7 +46,12 @@ final class Router implements IRouter
             if ($isMatched) break;
         }
 
-        if (!$isMatched) return $this->getRouteFromRequest(Request::READABLE, NotFound::PATH);
+        if (!$isMatched) {
+            return $this->getRouteFromRequest(
+                Request::READABLE,
+                NotFound::PATH,
+            );
+        }
 
         $params = $this->getRouteParmas($matches);
 
@@ -61,7 +61,7 @@ final class Router implements IRouter
     }
 
     /**
-     * @param array $htttp [$request, $response]
+     * @param array $http [$request, $response]
      */
     public function dispatch(Route $route, array $http): void
     {
@@ -71,7 +71,6 @@ final class Router implements IRouter
 
         $providers = array_reverse($route->meta->providers);
 
-
         $currentClassMethodReflection->invokeArgs(
             $currentClassReflection->newInstanceArgs($providers),
             $http,
@@ -80,7 +79,7 @@ final class Router implements IRouter
 
     private function getRouteFromRequest(string $method, string $path): Route
     {
-        return $this->routes[$method][$path] ?? throw new RouteNotFound;
+        return $this->routes[$method][$path] ?? throw new RouteNotFound();
     }
 
     /**
@@ -90,7 +89,10 @@ final class Router implements IRouter
      */
     private function matchRoute(string $pattern, string $uri): array
     {
-        $pattern = "/^" . str_replace(["/", "{", "}"], ["\/", "(?<", ">\w+)"], $pattern) . "$/";
+        $pattern =
+            "/^" .
+            str_replace(["/", "{", "}"], ["\/", "(?<", ">\w+)"], $pattern) .
+            "$/";
 
         $isMatched = preg_match($pattern, $uri, $matches);
 

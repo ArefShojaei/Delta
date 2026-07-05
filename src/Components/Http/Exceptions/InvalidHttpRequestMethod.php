@@ -2,12 +2,13 @@
 
 namespace Delta\Components\Http\Exceptions;
 
-use Delta\Common\Interfaces\PropertyGetter as IPropertyGetter;
-use Delta\Components\Http\HttpStatus;
 use Exception;
 
+use Delta\Common\Interfaces\PropertyGetter as IPropertyGetter;
+use Delta\Components\Http\HttpStatus;
 
-final class InvalidHttpRequestMethod extends Exception implements IPropertyGetter
+final class InvalidHttpRequestMethod extends Exception implements
+    IPropertyGetter
 {
     public function __construct(private string $method)
     {

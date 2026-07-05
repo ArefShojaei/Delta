@@ -4,7 +4,6 @@ namespace Delta\Components\Layer\Attributes;
 
 use Attribute;
 
-
 #[Attribute(Attribute::TARGET_CLASS)]
 class Module
 {

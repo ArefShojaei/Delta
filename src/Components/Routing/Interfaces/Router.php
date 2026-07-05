@@ -2,8 +2,7 @@
 
 namespace Delta\Components\Routing\Interfaces;
 
-use Delta\Components\Routing\{ Route, RouteMeta };
-
+use Delta\Components\Routing\{Route, RouteMeta};
 
 interface Router
 {

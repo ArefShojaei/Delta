@@ -2,12 +2,9 @@
 
 namespace Tests\Unit\Components;
 
-use Delta\Components\Json\{
-    Json,
-    Interfaces\Json as IJson
-};
 use PHPUnit\Framework\TestCase;
 
+use Delta\Components\Json\{Json, Interfaces\Json as IJson};
 
 final class JsonTest extends TestCase
 {
@@ -15,7 +12,7 @@ final class JsonTest extends TestCase
     {
         return [
             "id" => 1,
-            "name" => "Aref"
+            "name" => "Aref",
         ];
     }
 

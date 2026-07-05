@@ -4,7 +4,6 @@ namespace Delta\Application\Layers\Controller\Abilities;
 
 use Delta\Components\Routing\Router;
 
-
 trait CanRegisterRoute
 {
     private function registerRoutes(string $prefix, array $routes): void

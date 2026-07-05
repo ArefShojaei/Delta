@@ -2,9 +2,9 @@
 
 namespace Delta\Components\Container;
 
-use Delta\Components\Container\Interfaces\Container as IContainer;
 use Closure;
 
+use Delta\Components\Container\Interfaces\Container as IContainer;
 
 final class Container implements IContainer
 {
@@ -12,14 +12,16 @@ final class Container implements IContainer
 
     private array $instances = [];
 
-
     public function singleton(string $abstract, string|Closure $concrete): void
     {
         $this->bind($abstract, $concrete, true);
     }
 
-    public function bind(string $abstract, string|Closure $concrete, bool $isSingleton = false): void
-    {
+    public function bind(
+        string $abstract,
+        string|Closure $concrete,
+        bool $isSingleton = false,
+    ): void {
         $this->bindings[$abstract] = [$isSingleton, $concrete];
     }
 
@@ -30,7 +32,9 @@ final class Container implements IContainer
         [$isSingleton, $concrete] = $this->bindings[$abstract];
 
         # Is Clouser
-        if ($concrete instanceof Closure) return $concrete($this);
+        if ($concrete instanceof Closure) {
+            return $concrete($this);
+        }
 
         # Is Singleton
         if ($isSingleton) return $concrete::getInstance();
@@ -38,7 +42,7 @@ final class Container implements IContainer
         # Is Instnace
         if (isset($this->instances[$abstract])) return $this->instances[$abstract];
 
-        $this->instances[$abstract] = new $concrete;
+        $this->instances[$abstract] = new $concrete();
 
         return $this->instances[$abstract];
     }
@@ -55,6 +59,7 @@ final class Container implements IContainer
 
     private function has(string $abstract): bool
     {
-        return isset($this->bindings[$abstract]) || isset($this->instances[$abstract]);
+        return isset($this->bindings[$abstract]) ||
+            isset($this->instances[$abstract]);
     }
 }

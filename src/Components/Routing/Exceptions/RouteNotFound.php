@@ -2,11 +2,12 @@
 
 namespace Delta\Components\Routing\Exceptions;
 
-use Delta\Components\Http\HttpStatus;
 use Exception;
 
+use Delta\Components\Http\HttpStatus;
 
-final class RouteNotFound extends Exception {
+final class RouteNotFound extends Exception
+{
     public function __construct()
     {
         $statusCode = HttpStatus::HTTP_NOT_FOUND;
