@@ -2,20 +2,28 @@
 
 namespace Delta\Components\Env;
 
+use RuntimeException;
+
 use Delta\Components\Env\interfaces\DotEnvEnvironment as IDotEnvEnvironment;
 
 final class DotEnvEnvironment implements IDotEnvEnvironment
 {
-    public const FILENAME = ".env";
+    private const REGEX_PATTERN = "/\s*=\s*/";
 
     public function load(string $path): void
     {
-        $file = $path . "/" . self::FILENAME;
+        $file = $path;
+
+        if (!file_exists($file)) {
+            throw new RuntimeException("Dotenv file not exist: {$file}");
+        }
 
         $lines = file($file);
 
+        if (empty($lines)) return;
+
         foreach ($lines as $line) {
-            if (!preg_match("/\s*=\s*/", $line)) continue;
+            if (!preg_match(self::REGEX_PATTERN, $line)) continue;
 
             [$key, $value] = explode("=", $line);
 

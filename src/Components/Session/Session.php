@@ -18,14 +18,16 @@ final class Session implements ISession
 
     public static function remove(string $key): bool
     {
+        if (!isset($_SESSION[$key])) return false;
+
         unset($_SESSION[$key]);
 
-        return isset($_SESSION[$key]);
+        return true;
     }
 
     public static function clean(): void
     {
-        unset($_SESSION);
+        session_destroy();
     }
 
     public static function all(): array

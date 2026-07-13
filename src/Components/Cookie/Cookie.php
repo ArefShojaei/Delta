@@ -6,8 +6,15 @@ use Delta\Components\Cookie\Interfaces\Cookie as ICookie;
 
 final class Cookie implements ICookie
 {
-    public static function set(string $key, string $value): void
-    {
+    private const DELETE_EXPIRES_OFFSET = 3600;
+
+    public static function set(
+        string $key,
+        string $value,
+        int $expires = 0,
+    ): void {
+        setcookie($key, $value, $expires);
+
         $_COOKIE[$key] = $value;
     }
 
@@ -18,14 +25,18 @@ final class Cookie implements ICookie
 
     public static function remove(string $key): bool
     {
+        setcookie($key, "", time() - self::DELETE_EXPIRES_OFFSET);
+
         unset($_COOKIE[$key]);
 
-        return isset($_COOKIE[$key]);
+        return true;
     }
 
     public static function clean(): void
     {
-        unset($_COOKIE);
+        foreach (array_keys($_COOKIE) as $key) {
+            self::remove($key);
+        }
     }
 
     public static function all(): array
