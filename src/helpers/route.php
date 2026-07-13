@@ -1,13 +1,13 @@
 <?php
 
+use Delta\Components\Routing\RouteAlias;
+
 /**
  * Get Route by name
  */
 if (!function_exists("route")) {
     function route(string $name): ?string
     {
-        global $_ROUTE_NAMES;
-
-        return $_ROUTE_NAMES[$name] ?? null;
+        return RouteAlias::getName($name);
     }
 }
