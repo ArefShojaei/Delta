@@ -8,6 +8,8 @@ trait CanDispatchControllers
 {
     protected function dispatch(array $controllers)
     {
+        if (empty($controllers)) return;
+
         foreach ($controllers as $controller) {
             $controllerLayer = LayerFactory::createControllerLayer(
                 $controller,

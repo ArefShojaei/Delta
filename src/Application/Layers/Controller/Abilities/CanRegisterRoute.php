@@ -8,6 +8,8 @@ trait CanRegisterRoute
 {
     private function registerRoutes(string $prefix, array $routes): void
     {
+        if (empty($routes)) return;
+
         $router = $this->container->resolve(Router::class);
 
         foreach ($routes as $method => $meta) {

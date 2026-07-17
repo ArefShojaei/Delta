@@ -5,6 +5,7 @@ namespace Delta\Application\Layers\Controller;
 use ReflectionClass;
 
 use Delta\Components\Container\Container;
+use Delta\Application\Exceptions\ReflectionModuleException;
 use Delta\Application\Layers\Provider\Abilities\CanResolveProvider;
 use Delta\Components\Layer\Interfaces\LayerProvider as ILayerProvider;
 use Delta\Application\Layers\Controller\Abilities\{
@@ -28,6 +29,8 @@ final class ControllerLayer implements ILayerProvider
     public function process(): void
     {
         $controllerReflection = new ReflectionClass($this->controller);
+
+        if (!$controllerReflection) throw new ReflectionModuleException();
 
         $this->registerRoutes(
             prefix: $this->getPrefix($controllerReflection),

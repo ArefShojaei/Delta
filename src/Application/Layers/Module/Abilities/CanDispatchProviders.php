@@ -8,6 +8,8 @@ trait CanDispatchProviders
 {
     protected function dispatch(array $providers)
     {
+        if (empty($providers)) return;
+
         foreach ($providers as $provider) {
             $providerLayer = LayerFactory::createProviderLayer(
                 $provider,

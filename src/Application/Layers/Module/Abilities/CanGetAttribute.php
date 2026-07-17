@@ -5,6 +5,11 @@ namespace Delta\Application\Layers\Module\Abilities;
 use ReflectionClass;
 
 use Delta\Components\Layer\Attributes\Module;
+use Delta\Application\Exceptions\{
+    ReflectionAttributeException,
+    ReflectionModuleException,
+    ReflectionTypeException
+};
 
 trait CanGetAttribute
 {
@@ -12,9 +17,17 @@ trait CanGetAttribute
     {
         $moduleReflection = new ReflectionClass($this->module);
 
+        if (!$moduleReflection) throw new ReflectionModuleException();
+
         $attributes = $moduleReflection->getAttributes(Module::class);
 
-        return current($attributes)->newInstance();
+        if (empty($attributes)) throw new ReflectionAttributeException();
+
+        $attribute = current($attributes);
+
+        if (!is_object($attribute)) throw new ReflectionTypeException;
+
+        return $attribute->newInstance();
     }
 
     private function getAttributeControllers(): array

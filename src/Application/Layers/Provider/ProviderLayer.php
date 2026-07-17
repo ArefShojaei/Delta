@@ -3,9 +3,10 @@
 namespace Delta\Application\Layers\Provider;
 
 use ReflectionClass;
+
+use Delta\Store\LayerStore;
 use Delta\Components\Container\Container;
 use Delta\Application\Layers\Provider\Abilities\CanResolveProvider;
-use Delta\Store\LayerStore;
 use Delta\Components\Layer\{
     Attributes\Injectable,
     Interfaces\LayerProvider as ILayerProvider,
@@ -24,9 +25,7 @@ final class ProviderLayer implements ILayerProvider
     {
         $providerReflection = new ReflectionClass($this->provider);
 
-        if ($this->isInjected($providerReflection)) {
-            return;
-        }
+        if ($this->isInjected($providerReflection)) return;
 
         $layerStore = $this->container->resolve(LayerStore::class);
 

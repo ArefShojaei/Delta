@@ -9,15 +9,15 @@ use ReflectionAttribute;
 use Delta\Store\LayerStore;
 use Delta\Components\Routing\RouteMeta;
 use Delta\Components\Routing\Attributes\{Route, Middleware};
+use Delta\Application\Exceptions\ReflectionAttributeException;
+use Delta\Components\Routing\RouteAlias;
 
 trait CanResolveRouteAttribute
 {
     private function setGlobalRouteName(string $key, string $route): void
     {
-        global $_ROUTE_NAMES;
-
-        if (!isset($_ROUTE_NAMES[$key])) {
-            $_ROUTE_NAMES[$key] = $route;
+        if (!RouteAlias::exists($key)) {
+            RouteAlias::setName($key, $route);
         }
     }
 
@@ -33,9 +33,15 @@ trait CanResolveRouteAttribute
 
         if (empty($attributes)) return [];
 
-        $attribute = current($attributes)->newInstance();
+        $attribute = current($attributes);
 
-        return $attribute->middlewares;
+        if (!is_object($attribute)) {
+            throw new ReflectionAttributeException();
+        }
+
+        $instance = $attribute->newInstance();
+
+        return $instance->middlewares;
     }
 
     private function getRoutes(ReflectionClass $reflection): array

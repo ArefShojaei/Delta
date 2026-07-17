@@ -4,6 +4,7 @@ namespace Delta\Application\Layers\Controller\Abilities;
 
 use ReflectionClass;
 
+use Delta\Application\Exceptions\ReflectionAttributeException;
 use Delta\Components\Layer\{Attributes\Controller, Enums\LayerType};
 
 trait CanResolveControllerAttribute
@@ -12,7 +13,11 @@ trait CanResolveControllerAttribute
     {
         $attributes = $reflection->getAttributes(Controller::class);
 
-        return current($attributes)->newInstance();
+        $attribute = current($attributes);
+
+        if (!is_object($attribute)) throw new ReflectionAttributeException;
+
+        return $attribute->newInstance();
     }
 
     private function getPrefix(ReflectionClass $reflection): ?string
