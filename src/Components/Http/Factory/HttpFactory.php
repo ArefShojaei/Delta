@@ -2,20 +2,17 @@
 
 namespace Delta\Components\Http\Factory;
 
+use Delta\Components\Routing\Router;
 use Delta\Components\Http\{
-    Interfaces\HttpFactory as IHttpFactory,
-    Builders\HttpBuilder,
     Http,
     Request,
     Response,
+    Builders\HttpBuilder,
+    Interfaces\HttpFactory as IHttpFactory,
 };
-use Delta\Components\Routing\Router;
 
 final class HttpFactory implements IHttpFactory
 {
-    /**
-     * @param array $headers Http headers
-     */
     public static function createRequest(array $headers): Request
     {
         return new Request($headers);
