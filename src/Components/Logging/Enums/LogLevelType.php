@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Components\Log\Enums;
+namespace Delta\Components\Logging\Enums;
 
 enum LogLevelType
 {

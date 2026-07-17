@@ -1,8 +1,8 @@
 <?php
 
-namespace Delta\Components\Log;
+namespace Delta\Components\Logging;
 
-use Delta\Components\Log\Enums\LogLevelType;
+use Delta\Components\Logging\Enums\LogLevelType;
 
 class Log
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Delta\Components\Log\Abilities;
+namespace Delta\Components\Logging\Abilities;
 
-use Delta\Components\Log\Enums\LogLevelType as Log;
+use Delta\Components\Logging\Enums\LogLevelType as Log;
 
 trait CanLogMessage
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Components\Log\Interfaces;
+namespace Delta\Components\Logging\Interfaces;
 
 interface CanLogMessage
 {

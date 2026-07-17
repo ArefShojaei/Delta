@@ -1,9 +1,9 @@
 <?php
 
-namespace Delta\Components\Log;
+namespace Delta\Components\Logging;
 
 use Delta\Common\Interfaces\Singleton as ISingleton;
-use Delta\Components\Log\{
+use Delta\Components\Logging\{
     Abilities\CanLogMessage,
     Interfaces\CanLogMessage as ICanLogMessage,
 };
