@@ -19,12 +19,17 @@ final class EnvTest extends TestCase
 
         $this->env = new DotEnvEnvironment();
 
-        $this->env->load($this->getRootDirectoryPath());
+        $this->env->load($this->getFilePath());
     }
 
     private function getRootDirectoryPath(): string
     {
         return dirname(__DIR__, 3);
+    }
+
+    private function getFilePath(): string
+    {
+        return $this->getRootDirectoryPath() . "/.env";
     }
 
     /**
