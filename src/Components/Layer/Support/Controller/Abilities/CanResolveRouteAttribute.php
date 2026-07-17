@@ -1,0 +1,113 @@
+<?php
+
+namespace Delta\Components\Layer\Support\Controller\Abilities;
+
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionAttribute;
+
+use Delta\Components\Store\Store;
+use Delta\Components\Routing\{RouteMeta, RouteAlias};
+use Delta\Components\Routing\Attributes\{Route, Middleware};
+use Delta\Components\Layer\Exceptions\ReflectionAttributeException;
+
+trait CanResolveRouteAttribute
+{
+    private function setGlobalRouteName(string $key, string $route): void
+    {
+        if (!RouteAlias::exists($key)) {
+            RouteAlias::setName($key, $route);
+        }
+    }
+
+    private function getRouteName(ReflectionMethod $reflection): string
+    {
+        return $reflection->name;
+    }
+
+    private function getMiddlewares(
+        ReflectionClass|ReflectionMethod $reflection,
+    ): array {
+        $attributes = $reflection->getAttributes(Middleware::class);
+
+        if (empty($attributes)) return [];
+
+        $attribute = current($attributes);
+
+        if (!is_object($attribute)) {
+            throw new ReflectionAttributeException();
+        }
+
+        $instance = $attribute->newInstance();
+
+        return $instance->middlewares;
+    }
+
+    private function getRoutes(ReflectionClass $reflection): array
+    {
+        $routes = [];
+
+        $classMiddlewares = $this->getMiddlewares($reflection);
+
+        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+
+        $filteredMethods = array_filter(
+            $methods,
+            fn(ReflectionMethod $method) => $method->name !== "__construct",
+        );
+
+        foreach ($filteredMethods as $method) {
+            $methodMiddlewares = $this->getMiddlewares($method);
+
+            $attributes = $method->getAttributes(
+                Route::class,
+                ReflectionAttribute::IS_INSTANCEOF,
+            );
+
+            $attribute = current($attributes)->newInstance();
+
+            $key = $this->getRoutePrefixName($reflection) . $attribute->name;
+
+            if (!empty($key)) {
+                $this->setGlobalRouteName($key, $attribute->path);
+            }
+
+            $store = $this->container->resolve(Store::class);
+
+            $providerAbstract = $this->getProviderLayerName(
+                $this->getProviderName($reflection),
+            );
+
+            $exportProviderAbstract = $this->getExportProviderLayerName(
+                $this->getExportProviderName($reflection),
+            );
+
+            $providers = $store->getDependencies($providerAbstract) ?? [];
+            $exports = $store->getDependencies($exportProviderAbstract) ?? [];
+
+            // echo "__________________" . PHP_EOL;
+            // $data = explode(".", $providerAbstract);
+            // print_r([
+            //     "name" => current($data),
+            //     "providers" => $providers,
+            //     "exports" => $exports,
+            // ]);
+
+            $routes[$attribute->method][$attribute->path][
+                "meta"
+            ] = new RouteMeta(
+                method: $method,
+                reflection: $reflection,
+                providers: [...$providers, ...$exports],
+            );
+
+            $middlewares = array_merge($classMiddlewares, $methodMiddlewares);
+
+            $routes[$attribute->method][$attribute->path][
+                "middlewares"
+            ] = $middlewares;
+        }
+
+        return $routes;
+    }
+}
