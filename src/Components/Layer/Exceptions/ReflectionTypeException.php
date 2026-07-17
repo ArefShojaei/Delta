@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Application\Exceptions;
+namespace Delta\Components\Layer\Exceptions;
 
 use ReflectionException;
 
