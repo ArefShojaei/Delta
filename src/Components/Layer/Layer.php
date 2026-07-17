@@ -12,9 +12,9 @@ use Delta\Components\Layer\Interfaces\{
 
 final class Layer implements ILayer
 {
-    private const PROVIDERS_NAMESPACE = "Delta\\Application\\Layers\\";
+    private const NAMESPACE = "Delta\\Components\\Layer\\Support\\";
 
-    private const PROVIDER_SUFFIX_NAME = "Layer";
+    private const SUFFIX_NAME = "Layer";
 
     private ILayerProvider $layerProvider;
 
@@ -25,9 +25,9 @@ final class Layer implements ILayer
     ) {
         $type = ucfirst($type->value);
 
-        $layerProvider = "{$type}" . self::PROVIDER_SUFFIX_NAME;
+        $layer = "{$type}" . self::SUFFIX_NAME;
 
-        $namespace = self::PROVIDERS_NAMESPACE . $type . "\\" . $layerProvider;
+        $namespace = self::NAMESPACE . $type . "\\" . $layer;
 
         if (!class_exists($namespace)) throw new InvalidLayerProviderException();
 
