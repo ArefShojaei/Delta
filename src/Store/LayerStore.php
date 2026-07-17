@@ -3,6 +3,7 @@
 namespace Delta\Store;
 
 use Delta\Store\Interfaces\LayerStore as ILayerStore;
+use Delta\Store\Exceptions\InvalidStoreProviderException;
 
 final class LayerStore implements ILayerStore
 {
@@ -13,6 +14,8 @@ final class LayerStore implements ILayerStore
      */
     public function addDependency(string $abstract, object $concrete): void
     {
+        if (!str_contains($abstract, ".")) throw new InvalidStoreProviderException();
+
         [$layer, $component] = explode(".", $abstract);
 
         if (!isset($this->dependencies[$layer][$component])) {
@@ -27,6 +30,8 @@ final class LayerStore implements ILayerStore
     public function getDependencies(?string $abstract = null): ?array
     {
         if (is_null($abstract)) return $this->dependencies;
+
+        if (!str_contains($abstract, ".")) throw new InvalidStoreProviderException();
 
         [$layer, $component] = explode(".", $abstract);
 
