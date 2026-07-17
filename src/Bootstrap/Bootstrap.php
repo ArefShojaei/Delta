@@ -2,28 +2,44 @@
 
 namespace Delta\Bootstrap;
 
-use Delta\Bootstrap\Interfaces\Bootstrap as IBootstrap;
+use RuntimeException;
+
 use Delta\Components\Container\Container;
+use Delta\Bootstrap\Exceptions\InvalidServiceProviderException;
+use Delta\Bootstrap\Interfaces\{ServiceProvider, Bootstrap as IBootstrap};
 
 final class Bootstrap implements IBootstrap
 {
-    private ?Container $container;
+    public function __construct(private Container $container) {}
 
     public function init(): void
     {
-        $this->buildContainer();
-
         $this->registerServiceProviders();
     }
 
     private function registerServiceProviders(): void
     {
-        $app = require_once dirname(__DIR__) . "/config/app.php";
+        $file = dirname(__DIR__) . "/config/app.php";
 
-        $services = $app["providers"];
+        if (!is_file($file)) {
+            throw new RuntimeException("Configuration file not found: {$file}");
+        }
+
+        $config = require_once $file;
+
+        $services = $config["providers"];
+
+        if (empty($services)) return;
 
         foreach ($services as $service) {
             $instance = new $service();
+
+            if (
+                !is_object($instance) &&
+                !($instance instanceof ServiceProvider)
+            ) {
+                throw new InvalidServiceProviderException();
+            }
 
             $instance->register($this->getContainer());
 
@@ -31,13 +47,8 @@ final class Bootstrap implements IBootstrap
         }
     }
 
-    public function getContainer(): ?Container
+    public function getContainer(): Container
     {
         return $this->container;
-    }
-
-    private function buildContainer(): void
-    {
-        $this->container = new Container();
     }
 }

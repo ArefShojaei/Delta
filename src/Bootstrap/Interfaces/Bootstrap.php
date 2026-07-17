@@ -8,5 +8,5 @@ interface Bootstrap
 {
     public function init(): void;
 
-    public function getContainer(): ?Container;
+    public function getContainer(): Container;
 }
