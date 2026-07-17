@@ -9,4 +9,8 @@ enum LayerType: string
     case CONTROLLER = "controller";
 
     case PROVIDER = "provider";
+
+    case IMPORT = "import";
+
+    case EXPORT = "export";
 }
