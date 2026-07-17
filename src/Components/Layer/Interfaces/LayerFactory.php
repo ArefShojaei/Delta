@@ -20,4 +20,14 @@ interface LayerFactory
         string|object $provider,
         Container $container,
     ): LayerProvider;
+
+    public static function createImportLayer(
+        string|object $module,
+        Container $container,
+    ): LayerProvider;
+
+    public static function createExportLayer(
+        string|object $provider,
+        Container $container,
+    ): LayerProvider;
 }
