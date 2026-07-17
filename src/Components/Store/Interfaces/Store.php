@@ -1,8 +1,8 @@
 <?php
 
-namespace Delta\Store\Interfaces;
+namespace Delta\Components\Store\Interfaces;
 
-interface LayerStore
+interface Store
 {
     public function addDependency(string $abstract, object $concrete): void;
 

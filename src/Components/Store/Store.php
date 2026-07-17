@@ -1,29 +1,29 @@
 <?php
 
-namespace Delta\Store;
+namespace Delta\Components\Store;
 
-use Delta\Store\Interfaces\LayerStore as ILayerStore;
-use Delta\Store\Exceptions\InvalidStoreProviderException;
+use Delta\Components\Store\Interfaces\Store as IStore;
+use Delta\Components\Store\Exceptions\InvalidStoreProviderException;
 
-final class LayerStore implements ILayerStore
+final class Store implements IStore
 {
     private $dependencies = [];
 
     /**
-     * @param string $abstract (e.g., "provider.user", "provider.swagger")
+     * @param string $abstract (e.g., "user.provider", "product.export")
      */
     public function addDependency(string $abstract, object $concrete): void
     {
         if (!str_contains($abstract, ".")) throw new InvalidStoreProviderException();
 
-        [$layer, $component] = explode(".", $abstract);
+        [$component, $layer] = explode(".", $abstract);
 
-        if (!isset($this->dependencies[$layer][$component])) {
-            $this->dependencies[$layer][$component] = [];
+        if (!isset($this->dependencies[$component][$layer])) {
+            $this->dependencies[$component][$layer] = [];
         }
 
-        if (!in_array($concrete, $this->dependencies[$layer][$component])) {
-            $this->dependencies[$layer][$component][] = $concrete;
+        if (!in_array($concrete, $this->dependencies[$component][$layer])) {
+            $this->dependencies[$component][$layer][] = $concrete;
         }
     }
 
@@ -33,8 +33,8 @@ final class LayerStore implements ILayerStore
 
         if (!str_contains($abstract, ".")) throw new InvalidStoreProviderException();
 
-        [$layer, $component] = explode(".", $abstract);
+        [$component, $layer] = explode(".", $abstract);
 
-        return $this->dependencies[$layer][$component] ?? null;
+        return $this->dependencies[$component][$layer] ?? null;
     }
 }

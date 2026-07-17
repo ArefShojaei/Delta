@@ -2,6 +2,7 @@
 
 namespace Delta\Application;
 
+use Delta\Components\Container\Container;
 use Delta\Application\Exceptions\InvalidModuleException;
 use Delta\Application\Interfaces\DeltaFactory as IDeltaFactory;
 
@@ -13,6 +14,6 @@ final class DeltaFactory implements IDeltaFactory
             throw new InvalidModuleException("Root module not set!");
         }
 
-        return new Application($module);
+        return new Application($module, new Container());
     }
 }

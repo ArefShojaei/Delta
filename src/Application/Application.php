@@ -4,22 +4,22 @@ namespace Delta\Application;
 
 use Delta\Bootstrap\Bootstrap;
 use Delta\Components\Container\Container;
+use Delta\Components\Layer\LayerRegistry;
 use Delta\Components\{Http\Kernel, Env\DotEnvEnvironment};
+use Delta\Application\Interfaces\Application as IApplication;
 use Delta\Application\Exceptions\InvalidConfigurationExcepiton;
-use Delta\Application\{
-    Interfaces\Application as IApplication,
-    Layers\LayerRegisteration,
-};
 
-final class Application implements IApplication
+final class Application extends LayerRegistry implements IApplication
 {
-    use LayerRegisteration;
-
     private Bootstrap $bootstrap;
 
-    public function __construct(private readonly string|object $module)
-    {
-        $this->bootstrap = new Bootstrap(new Container());
+    public function __construct(
+        private readonly string|object $module,
+        private Container $container,
+    ) {
+        parent::__construct($this->container);
+
+        $this->bootstrap = new Bootstrap($this->container);
     }
 
     public function configure(array $config): self
@@ -39,14 +39,14 @@ final class Application implements IApplication
     {
         $this->bootstrap->init();
 
-        $this->registerModuleLayer();
+        $this->register($this->module);
     }
 
     public function run(): void
     {
         $this->boot();
 
-        $kernel = new Kernel($this->bootstrap->getContainer());
+        $kernel = new Kernel($this->container);
 
         $kernel->handle();
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Delta\Store\Exceptions;
+namespace Delta\Components\Store\Exceptions;
 
 use InvalidArgumentException;
 

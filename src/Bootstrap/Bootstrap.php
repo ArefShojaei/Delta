@@ -41,14 +41,9 @@ final class Bootstrap implements IBootstrap
                 throw new InvalidServiceProviderException();
             }
 
-            $instance->register($this->getContainer());
+            $instance->register($this->container);
 
-            $instance->boot($this->getContainer());
+            $instance->boot($this->container);
         }
-    }
-
-    public function getContainer(): Container
-    {
-        return $this->container;
     }
 }
