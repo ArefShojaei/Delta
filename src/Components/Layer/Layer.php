@@ -4,6 +4,7 @@ namespace Delta\Components\Layer;
 
 use Delta\Components\Container\Container;
 use Delta\Components\Layer\Enums\LayerType;
+use Delta\Components\Layer\Exceptions\InvalidLayerProviderException;
 use Delta\Components\Layer\Interfaces\{
     Layer as ILayer,
     LayerProvider as ILayerProvider,
@@ -27,6 +28,8 @@ final class Layer implements ILayer
         $layerProvider = "{$type}" . self::PROVIDER_SUFFIX_NAME;
 
         $namespace = self::PROVIDERS_NAMESPACE . $type . "\\" . $layerProvider;
+
+        if (!class_exists($namespace)) throw new InvalidLayerProviderException();
 
         $instance = new $namespace($class, $container);
 
