@@ -38,11 +38,11 @@ final class ModuleLayer implements ILayerProvider
         $this->getAttributeImports() &&
             $this->dispatchImports($this->getAttributeImports());
 
-        $this->getAttributeExports() &&
-            $this->dispatchExports($this->getAttributeExports());
-
         $this->getAttributeProviders() &&
             $this->dispatchProviders($this->getAttributeProviders());
+
+        $this->getAttributeExports() &&
+            $this->dispatchExports($this->getAttributeExports());
 
         $this->getAttributeControllers() &&
             $this->dispatchControllers($this->getAttributeControllers());
