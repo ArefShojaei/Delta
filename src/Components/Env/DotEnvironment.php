@@ -6,7 +6,7 @@ use RuntimeException;
 
 use Delta\Components\Env\interfaces\DotEnvEnvironment as IDotEnvEnvironment;
 
-final class DotEnvEnvironment implements IDotEnvEnvironment
+final class DotEnvironment implements IDotEnvEnvironment
 {
     private const REGEX_PATTERN = "/\s*=\s*/";
 

@@ -2,7 +2,7 @@
 
 namespace Delta\Components\Env\interfaces;
 
-interface DotEnvEnvironment
+interface DotEnvironment
 {
     public function load(string $path): void;
 
