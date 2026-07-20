@@ -6,9 +6,10 @@ use Delta\Components\Container\Container;
 use Delta\Components\Layer\BaseSupportLayer;
 use Delta\Components\Layer\Factory\LayerFactory;
 use Delta\Common\Interfaces\Processor as IProcessor;
+use Delta\Components\Layer\Interfaces\LayerProvider as ILayerProvider;
 use Delta\Components\Store\{Store, Enums\StoreType};
 
-final class ImportLayer extends BaseSupportLayer implements IProcessor
+final class ImportLayer extends BaseSupportLayer implements ILayerProvider
 {
     public function __construct(
         private readonly string|object $importedModule,

@@ -4,12 +4,12 @@ namespace Delta\Components\Layer\Support\Provider;
 
 use ReflectionClass;
 
-use Delta\Common\Interfaces\Processor as IProcessor;
-use Delta\Components\Store\{Store, Enums\StoreType};
 use Delta\Components\Container\Container;
+use Delta\Components\Store\{Store, Enums\StoreType};
 use Delta\Components\Layer\{BaseSupportLayer, Attributes\Injectable};
+use Delta\Components\Layer\Interfaces\LayerProvider as ILayerProvider;
 
-final class ProviderLayer extends BaseSupportLayer implements IProcessor
+final class ProviderLayer extends BaseSupportLayer implements ILayerProvider
 {
     public function __construct(
         private readonly string|object $provider,

@@ -3,7 +3,10 @@
 namespace Delta\Components\Layer\Support\Module;
 
 use Delta\Components\Container\Container;
-use Delta\Components\Layer\Interfaces\LayerProvider as ILayerProvider;
+use Delta\Components\Layer\Interfaces\{
+    LayerProvider as ILayerProvider,
+    LayerAttributeProvider as ILayerAttributeProvider,
+};
 use Delta\Components\Layer\Support\Module\Abilities\{
     CanDispatchControllers,
     CanDispatchExports,
@@ -12,7 +15,7 @@ use Delta\Components\Layer\Support\Module\Abilities\{
     CanGetAttribute,
 };
 
-final class ModuleLayer implements ILayerProvider
+final class ModuleLayer implements ILayerProvider, ILayerAttributeProvider
 {
     use CanDispatchControllers,
         CanDispatchProviders,
