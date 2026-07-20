@@ -40,7 +40,7 @@ final class LayerFactory implements ILayerFactory
         string|object $module,
         Container $container,
     ): ILayerProvider {
-        return self::createLayer(LayerType::MODULE, $module, $container);
+        return self::createLayer(LayerType::IMPORT, $module, $container);
     }
 
     public static function createExportLayer(
