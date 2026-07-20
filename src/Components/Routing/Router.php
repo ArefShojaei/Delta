@@ -13,6 +13,8 @@ final class Router implements IRouter
 {
     private array $routes = [];
 
+    private array $params = [];
+
     public function addRoute(
         string $method,
         string $path,
@@ -38,7 +40,9 @@ final class Router implements IRouter
 
         $validator = new RouterValidator($this->routes);
 
-        if (!$validator->isMethodExists($method)) throw new InvalidHttpRequestMethod($method);
+        if (!$validator->isMethodExists($method)) {
+            throw new InvalidHttpRequestMethod($method);
+        }
 
         foreach ($routes[$method] as $pattern => $route) {
             [$isMatched, $matches] = $this->matchRoute($pattern, $uri);
@@ -53,9 +57,9 @@ final class Router implements IRouter
             );
         }
 
-        $params = $this->getRouteParmas($matches);
+        $params = $this->getMatchedRouteParams($matches);
 
-        if ($params) $this->setRouteParams($params);
+        if ($params) $this->setMatchedRouteParams($params);
 
         return $route;
     }
@@ -69,7 +73,7 @@ final class Router implements IRouter
 
         $currentClassMethodReflection = $route->meta->method;
 
-        $providers = array_reverse($route->meta->providers);
+        $providers = $route->meta->providers;
 
         $currentClassMethodReflection->invokeArgs(
             $currentClassReflection->newInstanceArgs($providers),
@@ -99,7 +103,7 @@ final class Router implements IRouter
         return [$isMatched, $matches];
     }
 
-    private function getRouteParmas(array $routeMatches): array
+    private function getMatchedRouteParams(array $routeMatches): array
     {
         return array_filter(
             $routeMatches,
@@ -108,10 +112,13 @@ final class Router implements IRouter
         );
     }
 
-    private function setRouteParams(array $params): void
+    private function setMatchedRouteParams(array $params): void
     {
-        global $_PARAMS;
+        $this->params = $params;
+    }
 
-        $_PARAMS = $params;
+    public function getRouteParams(): array
+    {
+        return $this->params;
     }
 }
