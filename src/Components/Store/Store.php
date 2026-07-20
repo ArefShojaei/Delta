@@ -2,39 +2,59 @@
 
 namespace Delta\Components\Store;
 
+use Delta\Components\Store\Enums\StoreType;
 use Delta\Components\Store\Interfaces\Store as IStore;
-use Delta\Components\Store\Exceptions\InvalidStoreProviderException;
 
 final class Store implements IStore
 {
-    private $dependencies = [];
+    private array $dependencies = [];
 
-    /**
-     * @param string $abstract (e.g., "user.provider", "product.export")
-     */
-    public function addDependency(string $abstract, object $concrete): void
-    {
-        if (!str_contains($abstract, ".")) throw new InvalidStoreProviderException();
-
-        [$component, $layer] = explode(".", $abstract);
-
-        if (!isset($this->dependencies[$component][$layer])) {
-            $this->dependencies[$component][$layer] = [];
+    public function set(
+        string $abstract,
+        StoreType $key,
+        object|string $concrete,
+    ): void {
+        if (!$this->has($abstract, $key)) {
+            $this->dependencies[$abstract][$key->value] = [];
         }
 
-        if (!in_array($concrete, $this->dependencies[$component][$layer])) {
-            $this->dependencies[$component][$layer][] = $concrete;
+        if (!in_array($concrete, $this->dependencies[$abstract][$key->value])) {
+            $this->dependencies[$abstract][$key->value][] = $concrete;
         }
     }
 
-    public function getDependencies(?string $abstract = null): ?array
+    public function setRecursive(
+        string $abstract,
+        StoreType $key,
+        array $concretes,
+    ): void {
+        if (empty($concretes)) return;
+
+        foreach ($concretes as $concrete) {
+            $this->set($abstract, $key, $concrete);
+        }
+    }
+
+    public function get(string $abstract, StoreType $key): array
     {
-        if (is_null($abstract)) return $this->dependencies;
+        return $this->dependencies[$abstract][$key->value] ?? [];
+    }
 
-        if (!str_contains($abstract, ".")) throw new InvalidStoreProviderException();
+    public function all(?string $abstract = null): array
+    {
+        return is_null($abstract)
+            ? $this->dependencies
+            : $this->dependencies[$abstract];
+    }
 
-        [$component, $layer] = explode(".", $abstract);
+    public function has(string $abstract, StoreType $key): bool
+    {
+        return array_key_exists($abstract, $this->dependencies) &&
+            array_key_exists($key->value, $this->dependencies[$abstract]);
+    }
 
-        return $this->dependencies[$component][$layer] ?? null;
+    public function clean(): void
+    {
+        unset($this->dependencies);
     }
 }
