@@ -5,19 +5,19 @@ namespace Tests\Unit\Components;
 use PHPUnit\Framework\TestCase;
 
 use Delta\Components\Env\{
-    DotEnvEnvironment,
-    interfaces\DotEnvEnvironment as IDotEnvEnvironment,
+    DotEnvironment,
+    interfaces\DotEnvironment as IDotEnvironment,
 };
 
 final class EnvTest extends TestCase
 {
-    private DotEnvEnvironment $env;
+    private DotEnvironment $env;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->env = new DotEnvEnvironment();
+        $this->env = new DotEnvironment();
 
         $this->env->load($this->getFilePath());
     }
@@ -37,11 +37,11 @@ final class EnvTest extends TestCase
      */
     public function implementsEnvInterface(): void
     {
-        $interfaces = class_implements(DotEnvEnvironment::class);
+        $interfaces = class_implements(DotEnvironment::class);
 
         $this->assertIsArray($interfaces);
         $this->assertNotEmpty($interfaces);
-        $this->assertArrayHasKey(IDotEnvEnvironment::class, $interfaces);
+        $this->assertArrayHasKey(IDotEnvironment::class, $interfaces);
     }
 
     /**

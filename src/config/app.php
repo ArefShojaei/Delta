@@ -4,7 +4,7 @@ return [
     /**
      * Application name
      */
-    "name" => \Delta\Components\Env\DotEnvEnvironment::get(
+    "name" => \Delta\Components\Env\DotEnvironment::get(
         "APP_NAME",
         "Delta - PHP Framework",
     ),

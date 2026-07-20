@@ -4,9 +4,9 @@ namespace Delta\Components\Env;
 
 use RuntimeException;
 
-use Delta\Components\Env\interfaces\DotEnvEnvironment as IDotEnvEnvironment;
+use Delta\Components\Env\interfaces\DotEnvironment as IDotEnvironment;
 
-final class DotEnvironment implements IDotEnvEnvironment
+final class DotEnvironment implements IDotEnvironment
 {
     private const REGEX_PATTERN = "/\s*=\s*/";
 

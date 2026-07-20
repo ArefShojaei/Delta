@@ -5,7 +5,7 @@ namespace Delta\Application;
 use Delta\Bootstrap\Bootstrap;
 use Delta\Components\Container\Container;
 use Delta\Components\Layer\LayerRegistry;
-use Delta\Components\{Http\Kernel, Env\DotEnvEnvironment};
+use Delta\Components\{Http\Kernel, Env\DotEnvironment};
 use Delta\Application\Interfaces\Application as IApplication;
 use Delta\Application\Exceptions\InvalidConfigurationExcepiton;
 
@@ -28,7 +28,7 @@ final class Application extends LayerRegistry implements IApplication
             throw new InvalidConfigurationExcepiton("Config can not be empty!");
         }
 
-        $dotenv = new DotEnvEnvironment();
+        $dotenv = new DotEnvironment();
 
         $dotenv->load($config["env_path"]);
 
