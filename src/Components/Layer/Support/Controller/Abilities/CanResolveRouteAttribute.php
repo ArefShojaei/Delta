@@ -6,7 +6,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionAttribute;
 
-use Delta\Components\Store\Store;
+use Delta\Components\Store\{Store, Enums\StoreType};
 use Delta\Components\Routing\{RouteMeta, RouteAlias};
 use Delta\Components\Routing\Attributes\{Route, Middleware};
 use Delta\Components\Layer\Exceptions\ReflectionAttributeException;
@@ -30,7 +30,9 @@ trait CanResolveRouteAttribute
     ): array {
         $attributes = $reflection->getAttributes(Middleware::class);
 
-        if (empty($attributes)) return [];
+        if (empty($attributes)) {
+            return [];
+        }
 
         $attribute = current($attributes);
 
@@ -74,31 +76,20 @@ trait CanResolveRouteAttribute
 
             $store = $this->container->resolve(Store::class);
 
-            $providerAbstract = $this->getProviderLayerName(
-                $this->getProviderName($reflection),
+            $providers = $store->get(
+                $this->getParentModule(),
+                StoreType::PROVIDER,
             );
+            $exports = $store->get($this->getParentModule(), StoreType::EXPORT);
 
-            $exportProviderAbstract = $this->getExportProviderLayerName(
-                $this->getExportProviderName($reflection),
-            );
-
-            $providers = $store->getDependencies($providerAbstract) ?? [];
-            $exports = $store->getDependencies($exportProviderAbstract) ?? [];
-
-            // echo "__________________" . PHP_EOL;
-            // $data = explode(".", $providerAbstract);
-            // print_r([
-            //     "name" => current($data),
-            //     "providers" => $providers,
-            //     "exports" => $exports,
-            // ]);
+            $injectors = [...$providers, ...$exports];
 
             $routes[$attribute->method][$attribute->path][
                 "meta"
             ] = new RouteMeta(
                 method: $method,
                 reflection: $reflection,
-                providers: [...$providers, ...$exports],
+                providers: $injectors,
             );
 
             $middlewares = array_merge($classMiddlewares, $methodMiddlewares);

@@ -16,6 +16,8 @@ trait CanDispatchControllers
                 $this->container,
             );
 
+            $layer->setParentModule($this->module);
+
             $layer->process();
         }
     }

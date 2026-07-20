@@ -16,6 +16,8 @@ trait CanDispatchProviders
                 $this->container,
             );
 
+            $layer->setParentModule($this->module);
+
             $layer->process();
         }
     }

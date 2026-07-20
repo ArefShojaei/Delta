@@ -2,7 +2,6 @@
 
 namespace Delta\Components\Layer\Interfaces;
 
-interface LayerProvider
-{
-    public function process(): void;
-}
+use Delta\Common\Interfaces\Processor;
+
+interface LayerProvider extends LayerAttributeProvider, Processor {}

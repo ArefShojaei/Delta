@@ -17,35 +17,41 @@ trait CanGetAttribute
     {
         $moduleReflection = new ReflectionClass($this->module);
 
-        if (!$moduleReflection) throw new ReflectionModuleException();
+        if (!$moduleReflection) {
+            throw new ReflectionModuleException();
+        }
 
         $attributes = $moduleReflection->getAttributes(Module::class);
 
-        if (empty($attributes)) throw new ReflectionAttributeException();
+        if (empty($attributes)) {
+            throw new ReflectionAttributeException();
+        }
 
         $attribute = current($attributes);
 
-        if (!is_object($attribute)) throw new ReflectionTypeException();
+        if (!is_object($attribute)) {
+            throw new ReflectionTypeException();
+        }
 
         return $attribute->newInstance();
     }
 
-    private function getAttributeControllers(): array
+    public function getAttributeControllers(): array
     {
         return $this->getAttribute()->controllers;
     }
 
-    private function getAttributeProviders(): array
+    public function getAttributeProviders(): array
     {
         return $this->getAttribute()->providers;
     }
 
-    private function getAttributeImports(): array
+    public function getAttributeImports(): array
     {
         return $this->getAttribute()->imports;
     }
 
-    private function getAttributeExports(): array
+    public function getAttributeExports(): array
     {
         return $this->getAttribute()->exports;
     }

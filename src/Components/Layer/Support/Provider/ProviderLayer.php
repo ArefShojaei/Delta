@@ -4,18 +4,13 @@ namespace Delta\Components\Layer\Support\Provider;
 
 use ReflectionClass;
 
-use Delta\Components\Store\Store;
+use Delta\Common\Interfaces\Processor as IProcessor;
+use Delta\Components\Store\{Store, Enums\StoreType};
 use Delta\Components\Container\Container;
-use Delta\Components\Layer\Support\Provider\Abilities\CanResolveProvider;
-use Delta\Components\Layer\{
-    Attributes\Injectable,
-    Interfaces\LayerProvider as ILayerProvider,
-};
+use Delta\Components\Layer\{BaseSupportLayer, Attributes\Injectable};
 
-final class ProviderLayer implements ILayerProvider
+final class ProviderLayer extends BaseSupportLayer implements IProcessor
 {
-    use CanResolveProvider;
-
     public function __construct(
         private readonly string|object $provider,
         private Container $container,
@@ -29,11 +24,11 @@ final class ProviderLayer implements ILayerProvider
 
         $store = $this->container->resolve(Store::class);
 
-        $abstract = $this->getProviderLayerName(
-            $this->getProviderName($providerReflection),
+        $store->set(
+            $this->getParentModule(),
+            StoreType::PROVIDER,
+            $providerReflection->newInstance(),
         );
-
-        $store->addDependency($abstract, $providerReflection->newInstance());
     }
 
     private function isInjected(ReflectionClass $reflection): bool

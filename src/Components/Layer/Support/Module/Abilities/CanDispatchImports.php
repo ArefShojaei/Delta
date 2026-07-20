@@ -16,6 +16,8 @@ trait CanDispatchImports
                 $this->container,
             );
 
+            $layer->setParentModule($this->module);
+
             $layer->process();
         }
     }
