@@ -14,7 +14,7 @@ final class HttpServiceProvider implements IServiceProvider
     {
         $container->bind(
             Request::class,
-            fn() => HttpFactory::createRequest($_SERVER),
+            fn() => HttpFactory::createRequest($_SERVER, $container),
         );
 
         $container->bind(

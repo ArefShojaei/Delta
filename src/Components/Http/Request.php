@@ -2,10 +2,12 @@
 
 namespace Delta\Components\Http;
 
+use Delta\Components\Container\Container;
 use Delta\Components\Http\{
     Interfaces\Request as IRequest,
     Enums\HttpRequestHeader,
 };
+use Delta\Components\Routing\Router;
 
 final class Request implements IRequest
 {
@@ -21,7 +23,7 @@ final class Request implements IRequest
 
     private array $_variables = [];
 
-    public function __construct(private array $headers) {}
+    public function __construct(private array $headers, private Container $container) {}
 
     public function __set(string $prop, mixed $value): void
     {
@@ -110,10 +112,12 @@ final class Request implements IRequest
 
     public function params(?string $key = null): null|string|array
     {
-        global $_PARAMS;
+        $router = $this->container->resolve(Router::class);
 
-        if (is_null($key)) return $_PARAMS ?? [];
+        $params = $router->getRouteParams();
 
-        return $_PARAMS[$key] ?? null;
+        if (is_null($key)) return $params ?? [];
+
+        return $params[$key] ?? null;
     }
 }
