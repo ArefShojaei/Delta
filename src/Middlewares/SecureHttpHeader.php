@@ -14,46 +14,33 @@ final class SecureHttpHeader implements IMiddleware
         Response $response,
         Closure $next,
     ): bool {
+        # === Security Headers ===
+        $response->header("X-Content-Type-Options", "nosniff");
+        $response->header("X-Frame-Options", "DENY");
+        $response->header("X-XSS-Protection", "1; mode=block");
+        $response->header("Referrer-Policy", "strict-origin-when-cross-origin");
         $response->header(
             "Permissions-Policy",
-            "geolocation=(), microphone=()",
+            "geolocation=(), microphone=(), camera=(), payment=()",
         );
-        $response->header("Referrer-Policy", "strict-origin-when-cross-origin");
-        $response->header("Content-Type", "application/json; charset=utf-8");
-        $response->header("Cache-Control", "no-store, no-cache, private");
-        $response->header("X-Permitted-Cross-Domain-Policies", "none");
-        $response->header("X-Powered-By", "Delta - PHP Framework");
-        $response->header("X-Content-Type-Options", "nosniff");
-        $response->header("Content-Security-Policy", "DENY");
-        $response->header("Referrer-Policy", "no-referrer");
-        $response->header("Server", "nginx");
-        $response->header("X-Frame-Options", "DENY");
-        $response->header(
-            "Strict-Transport-Security",
-            "max-age=63072000; includeSubDomains; preload",
-        );
-        $response->header(
-            "Referrer-Policy",
-            "camera=(), microphone=(), geolocation=(), payment=(), fullscreen=(self)",
-        );
-        $response->header("Cross-Origin-Opener-Policy", "same-origin");
-        $response->header("Cross-Origin-Embedder-Policy", "require-corp");
-        $response->header("Cross-Origin-Resource-Policy", "same-origin");
-        $response->header("X-XSS-Protection", "0");
-        $response->header("Pragma", "no-cache");
-        $response->header("Expires", "0");
+
+        # === Content Security Policy ===
         $response->header(
             "Content-Security-Policy",
             "default-src 'self'; " .
                 "script-src 'self' 'unsafe-inline' https:; " .
-                "style-src 'self' 'unsafe-inline' https: 'unsafe-inline'; " .
+                "style-src 'self' 'unsafe-inline' https:; " .
                 "img-src 'self' data: https:; " .
                 "font-src 'self' https:; " .
                 "connect-src 'self' https:; " .
                 "frame-ancestors 'none'; " .
-                "upgrade-insecure-requests; " .
-                "block-all-mixed-content",
+                "base-uri 'self'; " .
+                "form-action 'self';",
         );
+
+        # === Remove Information Disclosure ===
+        $response->header("Server", "");
+        $response->header("X-Powered-By", "Delta Framework");
 
         return $next();
     }
