@@ -4,6 +4,8 @@ namespace Delta\Components\Container;
 
 use Closure;
 
+use Delta\Common\Interfaces\Singleton;
+use Delta\Components\Container\Exceptions\ContainerException;
 use Delta\Components\Container\Interfaces\Container as IContainer;
 
 final class Container implements IContainer
@@ -37,6 +39,10 @@ final class Container implements IContainer
         }
 
         # Is Singleton
+        if ($isSingleton && !($concrete instanceof Singleton)) {
+            throw new ContainerException("Concrete must be implement Singleton interface!");
+        }
+
         if ($isSingleton) return $concrete::getInstance();
 
         # Is Instnace
