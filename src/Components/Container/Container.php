@@ -39,7 +39,7 @@ final class Container implements IContainer
         }
 
         # Is Singleton
-        if ($isSingleton && !($concrete instanceof Singleton)) {
+        if ($isSingleton && !is_subclass_of($concrete, Singleton::class)) {
             throw new ContainerException("Concrete must be implement Singleton interface!");
         }
 
