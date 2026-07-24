@@ -2,13 +2,20 @@
     "name": "arefshojaei/delta",
     "description": " A Powerful PHP Framework for REST API",
     "license": "MIT",
+    "prefer-stable": true,
+    "minimum-stability": "stable",
+    "scripts": {
+        "test": "./vendor/bin/phpunit"
+    },
     "autoload": {
         "psr-4": {
             "Delta\\": "src/"
         },
         "files": [
             "src/helpers/dd.php",
-            "src/helpers/route.php"
+            "src/helpers/route.php",
+            "src/helpers/path/config_path.php",
+            "src/helpers/path/storage_path.php"
         ]
     },
     "autoload-dev": {
