@@ -30,7 +30,7 @@ final class Application extends LayerRegistry implements IApplication
 
         $dotenv = new DotEnvironment();
 
-        $dotenv->load($config["env_path"]);
+        $dotenv->load($config["env"]["path"]);
 
         return $this;
     }
