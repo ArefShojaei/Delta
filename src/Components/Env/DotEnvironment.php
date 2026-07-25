@@ -37,11 +37,9 @@ final class DotEnvironment implements IDotEnvironment
         }
     }
 
-    public static function get(
-        string $key,
-        ?string $defaultValue = null,
-    ): ?string {
-        return $_ENV[$key] ?? $defaultValue;
+    public static function get(string $key, ?string $default = null): ?string
+    {
+        return $_ENV[$key] ?? $default;
     }
 
     private function setSystemVariable(string $key, string $value): void
@@ -51,9 +49,6 @@ final class DotEnvironment implements IDotEnvironment
         putenv($assignment);
     }
 
-    /**
-     * Possible in $_ENV
-     */
     private function setGlobalVariable(string $key, string $value): void
     {
         $_ENV[$key] = $value;

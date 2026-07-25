@@ -6,8 +6,5 @@ interface DotEnvironment
 {
     public function load(string $path): void;
 
-    public static function get(
-        string $key,
-        ?string $defaultValue = null,
-    ): ?string;
+    public static function get(string $key, ?string $default = null): ?string;
 }
