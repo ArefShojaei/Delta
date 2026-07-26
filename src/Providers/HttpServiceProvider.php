@@ -33,6 +33,8 @@ final class HttpServiceProvider implements IServiceProvider
 
     public function boot(Container $container): void
     {
+        session_start();
+
         $http = $container->resolve(Http::class);
 
         $config = require dirname(__DIR__) . "/config/app.php";

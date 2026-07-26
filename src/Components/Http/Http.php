@@ -16,9 +16,7 @@ final class Http implements IHttp
         private Request $request,
         private Response $response,
         private Router $router,
-    ) {
-        session_start();
-    }
+    ) {}
 
     public function listen(): void
     {
@@ -42,9 +40,7 @@ final class Http implements IHttp
 
     public function applyMiddlewares(array $middlewares): void
     {
-        if (empty($middlewares)) {
-            return;
-        }
+        if (empty($middlewares)) return;
 
         $next = fn() => true;
 
