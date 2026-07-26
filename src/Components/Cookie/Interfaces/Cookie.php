@@ -8,6 +8,10 @@ interface Cookie
         string $key,
         string $value,
         int $expires = 0,
+        string $path = "",
+        string $domain = "",
+        bool $secure = false,
+        bool $httponly = false,
     ): void;
 
     public static function get(string $key): ?string;

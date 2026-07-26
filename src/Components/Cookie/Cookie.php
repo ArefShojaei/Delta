@@ -12,8 +12,12 @@ final class Cookie implements ICookie
         string $key,
         string $value,
         int $expires = 0,
+        string $path = "",
+        string $domain = "",
+        bool $secure = false,
+        bool $httponly = false,
     ): void {
-        setcookie($key, $value, $expires);
+        setcookie($key, $value, $expires, $path, $domain, $secure, $httponly);
 
         $_COOKIE[$key] = $value;
     }
