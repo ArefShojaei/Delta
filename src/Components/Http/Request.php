@@ -2,12 +2,13 @@
 
 namespace Delta\Components\Http;
 
+use Delta\Components\Json\Json;
+use Delta\Components\Routing\Router;
 use Delta\Components\Container\Container;
 use Delta\Components\Http\{
     Interfaces\Request as IRequest,
     Enums\HttpRequestHeader,
 };
-use Delta\Components\Routing\Router;
 
 final class Request implements IRequest
 {
@@ -103,7 +104,9 @@ final class Request implements IRequest
 
     public function body(?string $key = null): null|string|array
     {
-        $data = json_decode(file_get_contents("php://input"), true) ?? [];
+        $input = file_get_contents("php://input");
+
+        $data = Json::decode($input, true) ?? [];
 
         if (is_null($key)) return $data;
 

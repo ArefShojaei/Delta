@@ -24,11 +24,17 @@ interface Response extends OutputResponse
 
     public function redirect(string $route): void;
 
-    public function cookie(string $key, string $value): void;
+    public function cookie(
+        string $key,
+        string $value,
+        int $expires = 0,
+        string $path = "",
+        string $domain = "",
+        bool $secure = false,
+        bool $httponly = false,
+    ): void;
 
     public function session(string $key, string $value): void;
 
     public function status(int|HttpStatus $code): void;
-
-    public function send(): void;
 }

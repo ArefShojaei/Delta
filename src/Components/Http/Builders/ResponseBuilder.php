@@ -40,9 +40,24 @@ final class ResponseBuilder implements IResponseBuilder
         return $this;
     }
 
-    public function setCookie(string $key, string $value): self
-    {
-        $this->response->cookie($key, $value);
+    public function setCookie(
+        string $key,
+        string $value,
+        int $expires = 0,
+        string $path = "",
+        string $domain = "",
+        bool $secure = false,
+        bool $httponly = false,
+    ): self {
+        $this->response->cookie(
+            $key,
+            $value,
+            $expires,
+            $path,
+            $domain,
+            $secure,
+            $httponly,
+        );
 
         return $this;
     }

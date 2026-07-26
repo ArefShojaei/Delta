@@ -28,9 +28,16 @@ class Response extends HttpStatus implements IResponse
         $this->header("Location", $route);
     }
 
-    public function cookie(string $key, string $value): void
-    {
-        Cookie::set($key, $value);
+    public function cookie(
+        string $key,
+        string $value,
+        int $expires = 0,
+        string $path = "",
+        string $domain = "",
+        bool $secure = false,
+        bool $httponly = false,
+    ): void {
+        Cookie::set($key, $value, $expires, $path, $domain, $secure, $httponly);
     }
 
     public function session(string $key, string $value): void
@@ -49,7 +56,7 @@ class Response extends HttpStatus implements IResponse
 
         $this->body($data);
 
-        $this->send();
+        echo Json::encode($this->data);
     }
 
     public function html(string $content): void
@@ -57,13 +64,5 @@ class Response extends HttpStatus implements IResponse
         $this->header("Content-type", "text/html");
 
         echo $content;
-    }
-
-    /**
-     * Send JSON data
-     */
-    public function send(): void
-    {
-        echo Json::encode($this->data);
     }
 }

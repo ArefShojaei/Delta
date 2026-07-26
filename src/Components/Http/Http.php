@@ -2,13 +2,12 @@
 
 namespace Delta\Components\Http;
 
-use Exception;
-
+use Delta\Components\Routing\Router;
 use Delta\Components\Http\Interfaces\Http as IHttp;
-use Delta\Components\Routing\{Exceptions\RouteNotFound, Router};
+use Delta\Components\Routing\Exceptions\RouteNotFound;
 use Delta\Components\Http\Exceptions\{
-    InvalidHttpRequestMethod,
     InternalServerError,
+    InvalidHttpRequestMethod,
 };
 
 final class Http implements IHttp
@@ -17,7 +16,9 @@ final class Http implements IHttp
         private Request $request,
         private Response $response,
         private Router $router,
-    ) {}
+    ) {
+        session_start();
+    }
 
     public function listen(): void
     {
@@ -48,7 +49,9 @@ final class Http implements IHttp
         $next = fn() => true;
 
         foreach ($middlewares as $middleware) {
-            $isOpenedNext = (new $middleware())->handle(
+            $instance = new $middleware();
+
+            $isOpenedNext = $instance->handle(
                 $this->request,
                 $this->response,
                 $next,
@@ -58,18 +61,15 @@ final class Http implements IHttp
                 throw new InternalServerError();
             }
 
-            if (!$isOpenedNext) {
-                break;
-            }
+            if (!$isOpenedNext) break;
         }
 
-        if (!$isOpenedNext) {
-            exit();
-        }
+        if (!$isOpenedNext) exit();
     }
 
-    private function sendFailedResponseError(Exception $error): void
-    {
+    private function sendFailedResponseError(
+        InvalidHttpRequestMethod|RouteNotFound|InternalServerError $error,
+    ): void {
         $this->response->status($error->getCode());
 
         $this->response->json([

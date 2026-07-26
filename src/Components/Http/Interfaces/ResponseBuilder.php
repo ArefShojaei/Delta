@@ -12,7 +12,15 @@ interface ResponseBuilder
 
     public function setStatus(HttpStatus|Response|int $code): self;
 
-    public function setCookie(string $key, string $value): self;
+    public function setCookie(
+        string $key,
+        string $value,
+        int $expires = 0,
+        string $path = "",
+        string $domain = "",
+        bool $secure = false,
+        bool $httponly = false,
+    ): self;
 
     public function setSession(string $key, string $value): self;
 
