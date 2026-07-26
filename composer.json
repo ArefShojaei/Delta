@@ -14,9 +14,7 @@
         "files": [
             "src/helpers/env.php",
             "src/helpers/dd.php",
-            "src/helpers/route.php",
-            "src/helpers/path/config_path.php",
-            "src/helpers/path/storage_path.php"
+            "src/helpers/route.php"
         ]
     },
     "autoload-dev": {
