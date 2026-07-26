@@ -6,7 +6,7 @@ use Delta\Bootstrap\Bootstrap;
 use Delta\Components\Config\Config;
 use Delta\Components\Container\Container;
 use Delta\Components\Layer\LayerRegistry;
-use Delta\Components\{Http\Kernel, Env\DotEnvironment};
+use Delta\Components\Http\Kernel;
 use Delta\Application\Interfaces\Application as IApplication;
 use Delta\Application\Exceptions\InvalidConfigurationExcepiton;
 
