@@ -12,6 +12,7 @@
             "Delta\\": "src/"
         },
         "files": [
+            "src/helpers/env.php",
             "src/helpers/dd.php",
             "src/helpers/route.php",
             "src/helpers/path/config_path.php",
