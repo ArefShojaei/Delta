@@ -2,13 +2,13 @@
 
 namespace Delta\Components\Logging\Interfaces;
 
-interface CanLogMessage
+interface Logger
 {
-    public function info(string $message): string;
+    public function info(string $message): void;
 
-    public function warn(string $message): string;
+    public function warn(string $message): void;
 
-    public function error(string $message): string;
+    public function error(string $message): void;
 
-    public function success(string $message): string;
+    public function success(string $message): void;
 }
