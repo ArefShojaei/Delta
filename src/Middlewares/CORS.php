@@ -5,7 +5,7 @@ namespace Delta\Middlewares;
 use Closure;
 
 use Delta\Common\Interfaces\Middleware as IMiddleware;
-use Delta\Components\Http\{Request, Response};
+use Delta\Components\Http\{HttpStatus, Request, Response};
 
 final class CORS implements IMiddleware
 {
@@ -36,7 +36,7 @@ final class CORS implements IMiddleware
 
         # Preflight Request
         if ($request->method() === "OPTIONS") {
-            $response->status(204);
+            $response->status(HttpStatus::HTTP_NO_CONTENT);
 
             return false;
         }

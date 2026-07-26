@@ -5,6 +5,7 @@ namespace Delta\Middlewares;
 use Closure;
 
 use Delta\Components\Cache\Cache;
+use Delta\Components\Config\Config;
 use Delta\Common\Interfaces\Middleware as IMiddleware;
 use Delta\Components\Http\{HttpStatus, Request, Response};
 
@@ -23,12 +24,22 @@ final class RateLimiter implements IMiddleware
         $key = "rate_limit:{$ip}";
 
         if (!Cache::has($key)) {
-            Cache::set($key, 0, self::DECAY_SECONDS);
+            $decaySeconds = Config::get(
+                "rate_limiter.decay_seconds",
+                self::DECAY_SECONDS,
+            );
+
+            Cache::set($key, 0, $decaySeconds);
         }
 
         $attempts = Cache::get($key);
 
-        if ($attempts >= self::MAX_REQUESTS) {
+        $maxRequests = Config::get(
+            "rate_limiter.max_requests",
+            self::MAX_REQUESTS,
+        );
+
+        if ($attempts >= $maxRequests) {
             $response->status(HttpStatus::HTTP_TOO_MANY_REQUESTS);
             $response->json([
                 "error" => "Too Many Requests!",
