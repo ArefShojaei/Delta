@@ -24,6 +24,7 @@ return [
     |
     */
     "providers" => [
+        Delta\Providers\DotEnvironmentServiceProvider::class,
         Delta\Providers\LoggingServiceProvider::class,
         Delta\Providers\StoreServiceProvider::class,
         Delta\Providers\RouterServiceProvider::class,
