@@ -35,7 +35,7 @@ final class HttpServiceProvider implements IServiceProvider
     {
         $http = $container->resolve(Http::class);
 
-        $config = require config_path() . "/app.php";
+        $config = require dirname(__DIR__) . "/config/app.php";
 
         $http->applyMiddlewares($config["middlewares"]);
     }

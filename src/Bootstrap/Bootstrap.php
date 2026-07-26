@@ -19,7 +19,7 @@ final class Bootstrap implements IBootstrap
 
     private function registerServiceProviders(): void
     {
-        $file = config_path() . "/app.php";
+        $file = dirname(__DIR__) . "/config/app.php";
 
         if (!is_file($file)) {
             throw new RuntimeException("Configuration file not found: {$file}");
