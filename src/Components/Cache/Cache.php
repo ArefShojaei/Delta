@@ -2,6 +2,8 @@
 
 namespace Delta\Components\Cache;
 
+use Delta\Components\Config\Config;
+use Delta\Components\Cache\Exceptions\CacheException;
 use Delta\Components\Cache\Interfaces\Cache as ICache;
 
 final class Cache implements ICache
@@ -51,7 +53,11 @@ final class Cache implements ICache
 
     public static function clear(): bool
     {
-        foreach (glob(storage_path("cache") . "/*.cache") as $file) {
+        $path = Config::get("storage.cache.path");
+
+        if (!$path) throw new CacheException("Cache path is not defined!");
+
+        foreach (glob($path . "/*.cache") as $file) {
             unlink($file);
         }
 
@@ -60,6 +66,10 @@ final class Cache implements ICache
 
     private static function file(string $key): string
     {
-        return storage_path("cache") . "/" . sha1($key) . ".cache";
+        $path = Config::get("storage.cache.path");
+
+        if (!$path) throw new CacheException("Cache path is not defined!");
+
+        return $path . "/" . sha1($key) . ".cache";
     }
 }
