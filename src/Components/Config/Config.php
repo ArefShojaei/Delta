@@ -20,17 +20,12 @@ final class Config implements IConfig
         $data = self::$data;
 
         foreach ($segments as $segment) {
-            if (!self::has($segment)) return $default;
+            if (!isset($data[$segment])) return $default;
 
             $data = $data[$segment];
         }
 
         return $data;
-    }
-
-    public static function has(string $segment): bool
-    {
-        return isset(self::$data[$segment]);
     }
 
     public static function all(): array

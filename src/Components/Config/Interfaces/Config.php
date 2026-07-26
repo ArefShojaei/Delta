@@ -7,7 +7,5 @@ interface Config {
 
     public static function get(string $key, mixed $default = null): mixed;
 
-    public static function has(string $segment): bool;
-
     public static function all(): array;
 }
