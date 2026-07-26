@@ -11,10 +11,7 @@ return [
     | and other system-generated content.
     |
     */
-    "name" => \Delta\Components\Env\DotEnvironment::get(
-        "APP_NAME",
-        "Delta - PHP Framework",
-    ),
+    "name" => env("APP_NAME", "Delta - PHP Framework"),
 
     /*
     |--------------------------------------------------------------------------
