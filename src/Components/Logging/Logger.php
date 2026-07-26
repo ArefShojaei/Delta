@@ -23,28 +23,28 @@ final class Logger extends Log implements ISingleton, ILogger
 
     public function info(string $message): void
     {
-        $log = $this->createMessage($message, LogLevelType::INFO);
+        $log = $this->createMessage($message, LogLevelType::INFO) . PHP_EOL;
 
         $this->dispatch($log);
     }
 
     public function warn(string $message): void
     {
-        $log = $this->createMessage($message, LogLevelType::WARN);
+        $log = $this->createMessage($message, LogLevelType::WARN) . PHP_EOL;
 
         $this->dispatch($log);
     }
 
     public function error(string $message): void
     {
-        $log = $this->createMessage($message, LogLevelType::ERROR);
+        $log = $this->createMessage($message, LogLevelType::ERROR) . PHP_EOL;
 
         $this->dispatch($log);
     }
 
     public function success(string $message): void
     {
-        $log = $this->createMessage($message, LogLevelType::SUCCESS);
+        $log = $this->createMessage($message, LogLevelType::SUCCESS) . PHP_EOL;
 
         $this->dispatch($log);
     }
