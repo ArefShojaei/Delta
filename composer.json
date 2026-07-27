@@ -5,7 +5,7 @@
     "prefer-stable": true,
     "minimum-stability": "stable",
     "scripts": {
-        "test": "./vendor/bin/phpunit"
+        "test": "./vendor/bin/phpunit tests"
     },
     "autoload": {
         "psr-4": {
@@ -28,7 +28,6 @@
         }
     ],
     "require": {
-        "arefshojaei/kitdash": "^1.4",
         "arefshojaei/class-validator": "^1.4"
     },
     "require-dev": {
