@@ -1,6 +1,7 @@
 {
     "name": "arefshojaei/delta",
     "description": " A Powerful PHP Framework for REST API",
+    "version": "1.0.0",
     "license": "MIT",
     "prefer-stable": true,
     "minimum-stability": "stable",
