@@ -45,8 +45,10 @@ trait CanResolveRouteAttribute
         return $instance->middlewares;
     }
 
-    private function getRoutes(ReflectionClass $reflection): array
-    {
+    private function getRoutes(
+        ReflectionClass $reflection,
+        string $prefix,
+    ): array {
         $routes = [];
 
         $classMiddlewares = $this->getMiddlewares($reflection);
@@ -68,10 +70,13 @@ trait CanResolveRouteAttribute
 
             $attribute = current($attributes)->newInstance();
 
-            $key = $this->getRoutePrefixName($reflection) . $attribute->name;
+            $key =
+                $this->getRoutePrefixName($reflection) . "." . $attribute->name;
 
             if (!empty($key)) {
-                $this->setGlobalRouteName($key, $attribute->path);
+                $route = $prefix . $attribute->path;
+
+                $this->setGlobalRouteName($key, $route);
             }
 
             $store = $this->container->resolve(Store::class);

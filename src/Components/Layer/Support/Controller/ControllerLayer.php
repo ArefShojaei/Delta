@@ -33,9 +33,11 @@ final class ControllerLayer extends BaseSupportLayer implements ILayerProvider
             throw new ReflectionModuleException();
         }
 
+        $parentPrefixRoute = $this->getPrefix($controllerReflection);
+
         $this->registerRoutes(
-            prefix: $this->getPrefix($controllerReflection),
-            routes: $this->getRoutes($controllerReflection),
+            prefix: $parentPrefixRoute,
+            routes: $this->getRoutes($controllerReflection, $parentPrefixRoute),
         );
     }
 }
