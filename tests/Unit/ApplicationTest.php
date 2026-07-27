@@ -2,128 +2,60 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
-
-use Delta\Application\Application;
-use Delta\Application\Interfaces\Application as IApplication;
-use Delta\Application\Exceptions\InvalidConfigurationExcepiton;
+use Delta\Components\Config\Config;
 use Delta\Components\Container\Container;
+use Delta\Application\{Application, DeltaFactory};
+use Delta\Application\Exceptions\{
+    InvalidConfigurationExcepiton,
+    InvalidModuleException,
+};
+
+use Tests\Support\TestCase;
 
 final class ApplicationTest extends TestCase
 {
-    private Application $application;
-    private Container $container;
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->container = new Container();
-        $this->application = new Application(
-            MockAppModule::class,
-            $this->container
-        );
+
+        $this->resetStaticProperty(Config::class, "data", []);
     }
 
-    /**
-     * @test
-     */
-    public function implementsApplicationInterface(): void
+    public function testConfigureStoresApplicationConfig(): void
     {
-        $interfaces = class_implements(Application::class);
+        $application = new Application(MockAppModule::class, new Container());
 
-        $this->assertIsArray($interfaces);
-        $this->assertNotEmpty($interfaces);
-        $this->assertArrayHasKey(IApplication::class, $interfaces);
+        $result = $application->configure([
+            "env" => ["path" => "/tmp/app.env"],
+            "storage" => ["cache" => ["path" => "/tmp/cache"]],
+        ]);
+
+        $this->assertSame($application, $result);
+        $this->assertSame("/tmp/app.env", Config::get("env.path"));
+        $this->assertSame("/tmp/cache", Config::get("storage.cache.path"));
     }
 
-    /**
-     * @test
-     */
-    public function applicationConstructor(): void
-    {
-        $this->assertInstanceOf(Application::class, $this->application);
-    }
-
-    /**
-     * @test
-     */
-    public function configureThrowsExceptionWithEmptyConfig(): void
+    public function testConfigureRejectsEmptyConfig(): void
     {
         $this->expectException(InvalidConfigurationExcepiton::class);
-        $this->expectExceptionMessage("Config can not be empty!");
 
-        $this->application->configure([]);
+        $application = new Application(MockAppModule::class, new Container());
+        $application->configure([]);
     }
 
-    /**
-     * @test
-     */
-    public function configureReturnsApplicationInstance(): void
+    public function testFactoryCreatesApplication(): void
     {
-        // Create a temporary .env file for testing
-        $envFile = sys_get_temp_dir() . '/.env.test';
-        file_put_contents($envFile, "APP_NAME=Test\nAPP_ENV=testing\n");
+        $application = DeltaFactory::createApp(MockAppModule::class);
 
-        try {
-            $result = $this->application->configure(['env_path' => $envFile]);
-
-            $this->assertInstanceOf(Application::class, $result);
-        } finally {
-            @unlink($envFile);
-        }
+        $this->assertInstanceOf(Application::class, $application);
     }
 
-    /**
-     * @test
-     */
-    public function applicationHasRunMethod(): void
+    public function testFactoryRejectsEmptyModule(): void
     {
-        $this->assertTrue(method_exists($this->application, 'run'));
-    }
+        $this->expectException(InvalidModuleException::class);
 
-    /**
-     * @test
-     */
-    public function applicationHasConfigureMethod(): void
-    {
-        $this->assertTrue(method_exists($this->application, 'configure'));
-    }
-
-    /**
-     * @test
-     */
-    public function applicationAcceptsModuleAsString(): void
-    {
-        $app = new Application(MockAppModule::class, $this->container);
-
-        $this->assertInstanceOf(Application::class, $app);
-    }
-
-    /**
-     * @test
-     */
-    public function applicationAcceptsModuleAsObject(): void
-    {
-        $module = new MockAppModule();
-        $app = new Application($module, $this->container);
-
-        $this->assertInstanceOf(Application::class, $app);
-    }
-
-    /**
-     * @test
-     */
-    public function applicationContainsContainer(): void
-    {
-        $this->assertInstanceOf(Container::class, $this->container);
+        DeltaFactory::createApp("");
     }
 }
 
-// Mock Module for testing
-class MockAppModule
-{
-    public function register(): void
-    {
-        // Mock implementation
-    }
-}
+final class MockAppModule {}

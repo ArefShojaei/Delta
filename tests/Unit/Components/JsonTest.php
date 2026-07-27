@@ -2,83 +2,41 @@
 
 namespace Tests\Unit\Components;
 
-use PHPUnit\Framework\TestCase;
+use Delta\Components\Json\Json;
+use Delta\Components\Json\Interfaces\Json as JsonInterface;
 
-use Delta\Components\Json\{Json, Interfaces\Json as IJson};
+use Tests\Support\TestCase;
 
 final class JsonTest extends TestCase
 {
-    private function getUser()
-    {
-        return [
-            "id" => 1,
-            "name" => "Aref",
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function implementsJsonInterface(): void
+    public function testImplementsJsonInterface(): void
     {
         $interfaces = class_implements(Json::class);
 
-        $this->assertIsArray($interfaces);
-        $this->assertNotEmpty($interfaces);
-        $this->assertArrayHasKey(IJson::class, $interfaces);
+        $this->assertArrayHasKey(JsonInterface::class, $interfaces);
     }
 
-    /**
-     * @test
-     */
-    public function convertDataToJson(): string
+    public function testEncodeAndDecodeArrayPayload(): void
     {
-        $user = $this->getUser();
+        $payload = [
+            "id" => 1,
+            "name" => "Aref",
+            "meta" => ["active" => true],
+        ];
 
-        $json = Json::encode($user);
+        $json = Json::encode($payload);
+        $decoded = Json::decode($json, true);
 
         $this->assertIsString($json);
-
-        return $json;
+        $this->assertSame($payload, $decoded);
     }
 
-    /**
-     * @test
-     * @depends convertDataToJson
-     */
-    public function parseJsonDataToAnArray(string $json): void
+    public function testDecodeToObjectPayload(): void
     {
-        $user = $this->getUser();
+        $decoded = Json::decode('{"id":2,"name":"Delta"}');
 
-        $data = Json::decode($json, true);
-
-        $this->assertIsNotObject($data);
-        $this->assertIsNotString($data);
-        $this->assertNotEmpty($data);
-        $this->assertIsArray($data);
-        $this->assertArrayHasKey("id", $data);
-        $this->assertArrayHasKey("name", $data);
-        $this->assertEquals($data["id"], $user["id"]);
-        $this->assertEquals($data["name"], $user["name"]);
-    }
-
-    /**
-     * @test
-     * @depends convertDataToJson
-     */
-    public function parseJsonDataToAnObject(string $json): void
-    {
-        $user = $this->getUser();
-
-        $data = Json::decode($json);
-
-        $this->assertIsObject($data);
-        $this->assertIsNotString($data);
-        $this->assertNotEmpty($data);
-        $this->assertIsNotArray($data);
-        $this->assertObjectHasProperty("id", $data);
-        $this->assertObjectHasProperty("name", $data);
-        $this->assertEquals($data->id, $user["id"]);
-        $this->assertEquals($data->name, $user["name"]);
+        $this->assertIsObject($decoded);
+        $this->assertSame(2, $decoded->id);
+        $this->assertSame("Delta", $decoded->name);
     }
 }

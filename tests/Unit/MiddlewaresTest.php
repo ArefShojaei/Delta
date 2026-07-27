@@ -2,169 +2,119 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
-use Closure;
-
-use Delta\Middlewares\CORS;
-use Delta\Middlewares\SecureHttpHeader;
-use Delta\Common\Interfaces\Middleware;
-use Delta\Components\Http\Request;
-use Delta\Components\Http\Response;
+use Delta\Components\Config\Config;
 use Delta\Components\Container\Container;
+use Delta\Components\Http\{HttpStatus, Request, Response};
+use Delta\Middlewares\{CORS, RateLimiter, SecureHttpHeader};
+
+use Tests\Support\TestCase;
 
 final class MiddlewaresTest extends TestCase
 {
     private Container $container;
-    private Request $request;
     private Response $response;
+    private string $cachePath;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->resetStaticProperty(Config::class, "data", []);
         $this->container = new Container();
-        
-        $headers = [
-            'Method' => 'GET',
-            'URI' => '/api/users',
-            'Route' => '/users',
-            'IP' => '127.0.0.1',
-            'Protocol' => 'HTTP/1.1',
-            'Domain' => 'localhost',
-            'Agent' => 'Mozilla/5.0',
-            'Time' => time(),
-            'Host' => 'localhost:8000',
-        ];
-
-        $this->request = new Request($headers, $this->container);
         $this->response = new Response();
+        $this->cachePath = $this->tempDir("delta-cache-");
+
+        Config::set([
+            "storage" => [
+                "cache" => ["path" => $this->cachePath],
+            ],
+            "rate_limiter" => [
+                "max_requests" => 1,
+                "decay_seconds" => 60,
+            ],
+        ]);
     }
 
-    /**
-     * @test
-     */
-    public function corsMiddlewareImplementsInterface(): void
+    public function testCorsStopsPreflightRequests(): void
     {
-        $interfaces = class_implements(CORS::class);
+        $request = $this->makeRequest("OPTIONS", "/api/users");
+        $middleware = new CORS();
 
-        $this->assertIsArray($interfaces);
-        $this->assertArrayHasKey(Middleware::class, $interfaces);
+        $this->assertFalse(
+            $middleware->handle($request, $this->response, fn() => true),
+        );
+        $this->assertSame(HttpStatus::HTTP_NO_CONTENT, http_response_code());
     }
 
-    /**
-     * @test
-     */
-    public function secureHeadersMiddlewareImplementsInterface(): void
+    public function testCorsAllowsRegularRequests(): void
     {
-        $interfaces = class_implements(SecureHttpHeader::class);
+        $request = $this->makeRequest("GET", "/api/users", [
+            "Origin" => "https://example.test",
+        ]);
+        $middleware = new CORS();
 
-        $this->assertIsArray($interfaces);
-        $this->assertArrayHasKey(Middleware::class, $interfaces);
+        $this->assertTrue(
+            $middleware->handle($request, $this->response, fn() => true),
+        );
     }
 
-    /**
-     * @test
-     */
-    public function corsMiddlewareHasHandleMethod(): void
+    public function testSecureHeadersMiddlewarePassesThrough(): void
     {
-        $cors = new CORS();
+        $request = $this->makeRequest("GET", "/api/users");
+        $middleware = new SecureHttpHeader();
 
-        $this->assertTrue(method_exists($cors, 'handle'));
-    }
+        $called = false;
 
-    /**
-     * @test
-     */
-    public function secureHeadersMiddlewareHasHandleMethod(): void
-    {
-        $secure = new SecureHttpHeader();
+        $result = $middleware->handle(
+            $request,
+            $this->response,
+            function () use (&$called) {
+                $called = true;
 
-        $this->assertTrue(method_exists($secure, 'handle'));
-    }
-
-    /**
-     * @test
-     */
-    public function corsMiddlewareCallsNextWhenNotOptions(): void
-    {
-        $cors = new CORS();
-        $nextCalled = false;
-
-        $next = function() use (&$nextCalled) {
-            $nextCalled = true;
-            return true;
-        };
-
-        $result = $cors->handle($this->request, $this->response, $next);
+                return true;
+            },
+        );
 
         $this->assertTrue($result);
+        $this->assertTrue($called);
     }
 
-    /**
-     * @test
-     */
-    public function corsMiddlewareReturnsCorrectlyForOptions(): void
+    public function testRateLimiterAllowsFirstRequestAndBlocksTheSecond(): void
     {
-        $cors = new CORS();
-        
-        $headers = [
-            'Method' => 'OPTIONS',
-            'URI' => '/api/users',
-            'Route' => '/users',
-            'IP' => '127.0.0.1',
-            'Protocol' => 'HTTP/1.1',
-            'Domain' => 'localhost',
-            'Agent' => 'Mozilla/5.0',
-            'Time' => time(),
-            'Host' => 'localhost:8000',
-        ];
+        $request = $this->makeRequest("GET", "/api/users", [
+            "REMOTE_ADDR" => "10.0.0.1",
+        ]);
+        $middleware = new RateLimiter();
 
-        $request = new Request($headers, $this->container);
-        $response = new Response();
-
-        $next = function() {
-            return true;
-        };
-
-        $result = $cors->handle($request, $response, $next);
-
-        $this->assertFalse($result);
+        $this->assertTrue(
+            $middleware->handle($request, $this->response, fn() => true),
+        );
+        $this->assertFalse(
+            $middleware->handle($request, $this->response, fn() => true),
+        );
     }
 
-    /**
-     * @test
-     */
-    public function secureHeadersMiddlewareReturnsTrue(): void
-    {
-        $secure = new SecureHttpHeader();
-        
-        $nextCalled = false;
+    private function makeRequest(
+        string $method,
+        string $route,
+        array $overrides = [],
+    ): Request {
+        $headers = array_merge(
+            [
+                "REQUEST_METHOD" => $method,
+                "REQUEST_URI" => $route,
+                "PHP_SELF" => $route,
+                "REMOTE_ADDR" => "127.0.0.1",
+                "SERVER_PROTOCOL" => "HTTP/1.1",
+                "SERVER_NAME" => "localhost",
+                "HTTP_USER_AGENT" => "PHPUnit",
+                "REQUEST_TIME" => time(),
+                "HTTP_HOST" => "localhost:8000",
+                "Origin" => "https://example.test",
+            ],
+            $overrides,
+        );
 
-        $next = function() use (&$nextCalled) {
-            $nextCalled = true;
-            return true;
-        };
-
-        $result = $secure->handle($this->request, $this->response, $next);
-
-        $this->assertTrue($result);
-        $this->assertTrue($nextCalled);
-    }
-
-    /**
-     * @test
-     */
-    public function corsMiddlewareCallsNextWithClosure(): void
-    {
-        $cors = new CORS();
-        $closureCalled = false;
-
-        $closure = function() use (&$closureCalled) {
-            $closureCalled = true;
-            return true;
-        };
-
-        $cors->handle($this->request, $this->response, $closure);
-
-        $this->assertTrue($closureCalled);
+        return new Request($headers, $this->container);
     }
 }

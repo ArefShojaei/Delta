@@ -2,11 +2,16 @@
 
 namespace Tests\Unit\Components;
 
-use PHPUnit\Framework\TestCase;
-use Closure;
-
 use Delta\Components\Container\Container;
-use Delta\Components\Container\Interfaces\Container as IContainer;
+use Delta\Components\Container\Exceptions\ContainerException;
+use Delta\Components\Container\Interfaces\Container as ContainerInterface;
+
+use Tests\Support\TestCase;
+use Tests\Fixtures\Containers\{
+    AnotherTestService,
+    TestService,
+    TestSingletonService,
+};
 
 final class ContainerTest extends TestCase
 {
@@ -18,158 +23,67 @@ final class ContainerTest extends TestCase
         $this->container = new Container();
     }
 
-    /**
-     * @test
-     */
-    public function implementsContainerInterface(): void
+    public function testImplementsContainerInterface(): void
     {
         $interfaces = class_implements(Container::class);
 
-        $this->assertIsArray($interfaces);
-        $this->assertNotEmpty($interfaces);
-        $this->assertArrayHasKey(IContainer::class, $interfaces);
+        $this->assertArrayHasKey(ContainerInterface::class, $interfaces);
     }
 
-    /**
-     * @test
-     */
-    public function bindClassToContainer(): void
+    public function testBindAndResolveConcreteClass(): void
     {
-        $this->container->bind('TestClass', TestServiceClass::class);
+        $this->container->bind("service", TestService::class);
 
-        $bindings = $this->container->getBindings();
+        $instance = $this->container->resolve("service");
 
-        $this->assertArrayHasKey('TestClass', $bindings);
-        $this->assertIsArray($bindings['TestClass']);
+        $this->assertInstanceOf(TestService::class, $instance);
     }
 
-    /**
-     * @test
-     */
-    public function resolveBindingFromContainer(): void
+    public function testResolveUnknownBindingReturnsNull(): void
     {
-        $this->container->bind('TestClass', TestServiceClass::class);
-
-        $instance = $this->container->resolve('TestClass');
-
-        $this->assertInstanceOf(TestServiceClass::class, $instance);
+        $this->assertNull($this->container->resolve("missing"));
     }
 
-    /**
-     * @test
-     */
-    public function resolveNonExistentBindingReturnsNull(): void
-    {
-        $instance = $this->container->resolve('NonExistent');
-
-        $this->assertNull($instance);
-    }
-
-    /**
-     * @test
-     */
-    public function singletonBindingReturnsSameInstance(): void
-    {
-        $this->container->singleton('SingletonService', TestSingletonService::class);
-
-        $instance1 = $this->container->resolve('SingletonService');
-        $instance2 = $this->container->resolve('SingletonService');
-
-        $this->assertSame($instance1, $instance2);
-    }
-
-    /**
-     * @test
-     */
-    public function bindingWithClosureCallsClosure(): void
+    public function testClosureBindingIsExecuted(): void
     {
         $called = false;
 
-        $this->container->bind('ClosureService', function($container) use (&$called) {
+        $this->container->bind("factory", function () use (&$called) {
             $called = true;
-            return new TestServiceClass();
+
+            return new TestService();
         });
 
-        $instance = $this->container->resolve('ClosureService');
+        $instance = $this->container->resolve("factory");
 
         $this->assertTrue($called);
-        $this->assertInstanceOf(TestServiceClass::class, $instance);
+        $this->assertInstanceOf(TestService::class, $instance);
     }
 
-    /**
-     * @test
-     */
-    public function getBindingsReturnsAllBindings(): void
+    public function testSingletonBindingReturnsSameInstance(): void
     {
-        $this->container->bind('Service1', TestServiceClass::class);
-        $this->container->bind('Service2', TestServiceClass::class);
+        $this->container->singleton("singleton", TestSingletonService::class);
 
-        $bindings = $this->container->getBindings();
+        $first = $this->container->resolve("singleton");
+        $second = $this->container->resolve("singleton");
 
-        $this->assertCount(2, $bindings);
-        $this->assertArrayHasKey('Service1', $bindings);
-        $this->assertArrayHasKey('Service2', $bindings);
+        $this->assertSame($first, $second);
     }
 
-    /**
-     * @test
-     */
-    public function getInstancesReturnsAllResolvedInstances(): void
+    public function testSingletonBindingRequiresSingletonContract(): void
     {
-        $this->container->bind('Service1', TestServiceClass::class);
+        $this->expectException(ContainerException::class);
 
-        $this->container->resolve('Service1');
-
-        $instances = $this->container->getInstances();
-
-        $this->assertArrayHasKey('Service1', $instances);
-        $this->assertInstanceOf(TestServiceClass::class, $instances['Service1']);
+        $this->container->singleton("broken", AnotherTestService::class);
+        $this->container->resolve("broken");
     }
 
-    /**
-     * @test
-     */
-    public function containerCanResolveMultipleDifferentServices(): void
+    public function testGetBindingsAndInstancesExposeContainerState(): void
     {
-        $this->container->bind('Service1', TestServiceClass::class);
-        $this->container->bind('Service2', AnotherTestService::class);
+        $this->container->bind("service", TestService::class);
+        $this->container->resolve("service");
 
-        $service1 = $this->container->resolve('Service1');
-        $service2 = $this->container->resolve('Service2');
-
-        $this->assertInstanceOf(TestServiceClass::class, $service1);
-        $this->assertInstanceOf(AnotherTestService::class, $service2);
-        $this->assertNotSame($service1, $service2);
-    }
-}
-
-// Test helper classes
-class TestServiceClass
-{
-    public function getMessage(): string
-    {
-        return 'Test Service';
-    }
-}
-
-class AnotherTestService
-{
-    public function getName(): string
-    {
-        return 'Another Service';
-    }
-}
-
-class TestSingletonService
-{
-    public static function getInstance(): self
-    {
-        static $instance = null;
-        
-        if ($instance === null) {
-            $instance = new self();
-        }
-        
-        return $instance;
+        $this->assertArrayHasKey("service", $this->container->getBindings());
+        $this->assertArrayHasKey("service", $this->container->getInstances());
     }
 }

@@ -2,78 +2,48 @@
 
 namespace Tests\Unit\Components;
 
-use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-use Delta\Components\Env\{
-    DotEnvironment,
-    interfaces\DotEnvironment as IDotEnvironment,
-};
+use Delta\Components\Env\DotEnvironment;
+use Delta\Components\Env\interfaces\DotEnvironment as DotEnvironmentInterface;
+
+use Tests\Support\TestCase;
 
 final class EnvTest extends TestCase
 {
-    private DotEnvironment $env;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->env = new DotEnvironment();
-
-        $this->env->load($this->getFilePath());
-    }
-
-    private function getRootDirectoryPath(): string
-    {
-        return dirname(__DIR__, 3);
-    }
-
-    private function getFilePath(): string
-    {
-        return $this->getRootDirectoryPath() . "/.env";
-    }
-
-    /**
-     * @test
-     */
-    public function implementsEnvInterface(): void
+    public function testImplementsEnvInterface(): void
     {
         $interfaces = class_implements(DotEnvironment::class);
 
-        $this->assertIsArray($interfaces);
-        $this->assertNotEmpty($interfaces);
-        $this->assertArrayHasKey(IDotEnvironment::class, $interfaces);
+        $this->assertArrayHasKey(DotEnvironmentInterface::class, $interfaces);
     }
 
-    /**
-     * @test
-     */
-    public function isEnvFileLoaded(): void
+    public function testLoadReadsValuesFromDotenvFile(): void
     {
-        $this->assertIsArray($_ENV);
-        $this->assertNotEmpty($_ENV);
+        $path = $this->tempFile(
+            "delta-env-",
+            "APP_NAME=Delta Test\nAPP_ENV=testing\n",
+        );
+
+        $env = new DotEnvironment();
+        $env->load($path);
+
+        $this->assertSame("Delta Test", DotEnvironment::get("APP_NAME"));
+        $this->assertSame("testing", DotEnvironment::get("APP_ENV"));
+        $this->assertSame(
+            "fallback",
+            DotEnvironment::get("NOT_DEFINED", "fallback"),
+        );
     }
 
-    /**
-     * @test
-     */
-    public function getVariableValueFromEnvFileByValidKey(): void
+    public function testLoadMissingFileThrowsRuntimeException(): void
     {
-        $name = $this->env->get("APP_NAME");
+        $this->expectException(RuntimeException::class);
 
-        $this->assertIsString($name);
-        $this->assertEquals("Delta", $name);
-    }
+        $dotenv = new DotEnvironment();
 
-    /**
-     * @test
-     */
-    public function getDefaultVariableValueFromEnvFileByInvalidKey(): void
-    {
-        $default = "1.0.0";
-
-        $version = $this->env->get("APP_VERSION", $default);
-
-        $this->assertIsString($version);
-        $this->assertEquals($default, $version);
+        $dotenv->load(
+            $this->tempDir("delta-missing-") . DIRECTORY_SEPARATOR . ".env",
+        );
     }
 }

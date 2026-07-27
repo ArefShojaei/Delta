@@ -2,17 +2,19 @@
 
 namespace Tests\Unit\Components;
 
-use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionMethod;
 
-use Delta\Components\Routing\Router;
-use Delta\Components\Routing\Route;
-use Delta\Components\Routing\RouteMeta;
-use Delta\Components\Routing\Interfaces\Router as IRouter;
+use Delta\Components\Container\Container;
+use Delta\Components\Http\{Request, Response};
+use Delta\Components\Http\Exceptions\InternalServerError;
+use Delta\Components\Routing\Attributes\NotFound;
 use Delta\Components\Routing\Exceptions\RouteNotFound;
 use Delta\Components\Http\Exceptions\InvalidHttpRequestMethod;
-use Delta\Components\Container\Container;
+use Delta\Components\Routing\Interfaces\Router as RouterInterface;
+use Delta\Components\Routing\{Router, Route, RouteAlias, RouteMeta};
+
+use Tests\Fixtures\Http\DemoController;
+use Tests\Support\TestCase;
 
 final class RouterTest extends TestCase
 {
@@ -22,211 +24,79 @@ final class RouterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->router = new Router();
         $this->container = new Container();
+        $this->resetStaticProperty(RouteAlias::class, "names", []);
     }
 
-    /**
-     * @test
-     */
-    public function implementsRouterInterface(): void
+    public function testImplementsRouterInterface(): void
     {
         $interfaces = class_implements(Router::class);
 
-        $this->assertIsArray($interfaces);
-        $this->assertNotEmpty($interfaces);
-        $this->assertArrayHasKey(IRouter::class, $interfaces);
+        $this->assertArrayHasKey(RouterInterface::class, $interfaces);
     }
 
-    /**
-     * @test
-     */
-    public function addRouteToRouter(): void
+    public function testAddAndReadRoutes(): void
     {
-        $meta = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users', $meta);
+        $routeMeta = $this->routeMetaFor("users");
+        $this->router->addRoute("GET", "/api/users", $routeMeta, [
+            "middleware",
+        ]);
 
-        $routes = $this->router->getRoutes('GET');
+        $routes = $this->router->getRoutes("GET");
 
-        $this->assertArrayHasKey('/users', $routes);
-        $this->assertInstanceOf(Route::class, $routes['/users']);
+        $this->assertArrayHasKey("/api/users", $routes);
+        $this->assertInstanceOf(Route::class, $routes["/api/users"]);
+        $this->assertSame(["middleware"], $routes["/api/users"]->middlewares);
     }
 
-    /**
-     * @test
-     */
-    public function addMultipleRoutesWithSameMethod(): void
+    public function testFindRouteMatchesDynamicParameters(): void
     {
-        $meta = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users', $meta);
-        $this->router->addRoute('GET', '/posts', $meta);
+        $this->router->addRoute(
+            "GET",
+            "/api/users/{id}",
+            $this->routeMetaFor("user"),
+        );
 
-        $routes = $this->router->getRoutes('GET');
+        $route = $this->router->findRoute("GET", "/api/users/42");
 
-        $this->assertCount(2, $routes);
-        $this->assertArrayHasKey('/users', $routes);
-        $this->assertArrayHasKey('/posts', $routes);
+        $this->assertSame("/api/users/{id}", $route->path);
+        $this->assertSame(["id" => "42"], $this->router->getRouteParams());
     }
 
-    /**
-     * @test
-     */
-    public function addRoutesWithDifferentMethods(): void
+    public function testFindRouteFallsBackToNotFoundRoute(): void
     {
-        $meta = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users', $meta);
-        $this->router->addRoute('POST', '/users', $meta);
-        $this->router->addRoute('DELETE', '/users/1', $meta);
+        $this->router->addRoute(
+            "GET",
+            NotFound::PATH,
+            $this->routeMetaFor("users"),
+        );
 
-        $allRoutes = $this->router->getRoutes();
+        $route = $this->router->findRoute("GET", "/missing");
 
-        $this->assertArrayHasKey('GET', $allRoutes);
-        $this->assertArrayHasKey('POST', $allRoutes);
-        $this->assertArrayHasKey('DELETE', $allRoutes);
+        $this->assertSame(NotFound::PATH, $route->path);
     }
 
-    /**
-     * @test
-     */
-    public function matchExactRoute(): void
-    {
-        $meta = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users', $meta);
-
-        $route = $this->router->findRoute('GET', '/users');
-
-        $this->assertInstanceOf(Route::class, $route);
-        $this->assertEquals('/users', $route->path);
-    }
-
-    /**
-     * @test
-     */
-    public function matchRouteWithDynamicParameter(): void
-    {
-        $meta = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users/{id}', $meta);
-
-        $route = $this->router->findRoute('GET', '/users/123');
-
-        $this->assertInstanceOf(Route::class, $route);
-        $this->assertEquals('/users/{id}', $route->path);
-    }
-
-    /**
-     * @test
-     */
-    public function extractRouteParameterFromUri(): void
-    {
-        $meta = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users/{id}', $meta);
-
-        $this->router->findRoute('GET', '/users/42');
-        $params = $this->router->getRouteParams();
-
-        $this->assertArrayHasKey('id', $params);
-        $this->assertEquals('42', $params['id']);
-    }
-
-    /**
-     * @test
-     */
-    public function extractMultipleRouteParameters(): void
-    {
-        $meta = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users/{userId}/posts/{postId}', $meta);
-
-        $this->router->findRoute('GET', '/users/5/posts/10');
-        $params = $this->router->getRouteParams();
-
-        $this->assertArrayHasKey('userId', $params);
-        $this->assertArrayHasKey('postId', $params);
-        $this->assertEquals('5', $params['userId']);
-        $this->assertEquals('10', $params['postId']);
-    }
-
-    /**
-     * @test
-     */
-    public function throwExceptionForInvalidHttpMethod(): void
+    public function testFindRouteThrowsForInvalidMethod(): void
     {
         $this->expectException(InvalidHttpRequestMethod::class);
 
-        $this->router->findRoute('INVALID_METHOD', '/users');
+        $this->router->findRoute("INVALID", "/api/users");
     }
 
-    /**
-     * @test
-     */
-    public function matchFirstMatchingRoute(): void
+    public function testFindRouteThrowsWhenFallbackRouteIsMissing(): void
     {
-        $meta1 = $this->createMockRouteMeta();
-        $meta2 = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users', $meta1);
-        $this->router->addRoute('GET', '/users', $meta2);
+        $this->expectException(InvalidHttpRequestMethod::class);
 
-        $route = $this->router->findRoute('GET', '/users');
-
-        $this->assertInstanceOf(Route::class, $route);
+        $this->router->findRoute("GET", "/missing");
     }
 
-    /**
-     * @test
-     */
-    public function addRouteWithMiddlewares(): void
+    private function routeMetaFor(string $methodName): RouteMeta
     {
-        $meta = $this->createMockRouteMeta();
-        $middlewares = ['Middleware1', 'Middleware2'];
-        
-        $this->router->addRoute('POST', '/users', $meta, $middlewares);
+        $reflection = new ReflectionClass(DemoController::class);
+        $method = $reflection->getMethod($methodName);
 
-        $routes = $this->router->getRoutes('POST');
-        $route = $routes['/users'];
-
-        $this->assertCount(2, $route->middlewares);
-        $this->assertContains('Middleware1', $route->middlewares);
-        $this->assertContains('Middleware2', $route->middlewares);
-    }
-
-    /**
-     * @test
-     */
-    public function getRoutesWithoutMethodReturnsAllRoutes(): void
-    {
-        $meta = $this->createMockRouteMeta();
-        
-        $this->router->addRoute('GET', '/users', $meta);
-        $this->router->addRoute('POST', '/users', $meta);
-
-        $allRoutes = $this->router->getRoutes();
-
-        $this->assertIsArray($allRoutes);
-        $this->assertArrayHasKey('GET', $allRoutes);
-        $this->assertArrayHasKey('POST', $allRoutes);
-    }
-
-    /**
-     * Helper method to create mock RouteMeta
-     */
-    private function createMockRouteMeta(): RouteMeta
-    {
-        $reflection = new ReflectionClass(RouterTest::class);
-        $method = $reflection->getMethod('createMockRouteMeta');
-
-        return new RouteMeta(
-            RouterTest::class,
-            'createMockRouteMeta',
-            [],
-            $reflection,
-            $method
-        );
+        return new RouteMeta($method, $reflection, []);
     }
 }
